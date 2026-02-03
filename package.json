@@ -1,6 +1,11 @@
 {
   "name": "bodrix-ai-final",
   "version": "1.0.0",
+  "description": "Bodrix AI - Advanced AI Chatbot Platform with Multi-tier User System",
+  "author": {
+    "name": "عبدالله الحصيني",
+    "email": "abdlh20101@gmail.com"
+  },
   "type": "module",
   "license": "MIT",
   "scripts": {

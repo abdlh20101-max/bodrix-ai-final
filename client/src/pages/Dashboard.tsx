@@ -1,28 +1,40 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useLanguage } from "@/_core/hooks/useLanguage";
+import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { LogOut, MessageSquare, Zap } from "lucide-react";
+import { LogOut, MessageSquare, Zap, Image, TrendingUp } from "lucide-react";
 import { useLocation } from "wouter";
 
 export default function Dashboard() {
   const { user, logout, loading } = useAuth();
+  const { t } = useLanguage();
   const [, navigate] = useLocation();
+  const profileQuery = trpc.user.profile.useQuery();
+  const pointsQuery = trpc.points.getBalance.useQuery();
+  const messagesQuery = trpc.messages.getRemainingToday.useQuery();
+  const imagesQuery = trpc.images.getRemainingToday.useQuery();
 
   const handleLogout = async () => {
     await logout();
     navigate("/login");
   };
 
-  if (loading) {
+  if (loading || profileQuery.isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">جاري التحميل...</p>
+          <p className="text-gray-600">{t("common.loading")}</p>
         </div>
       </div>
     );
   }
+
+  const profile = profileQuery.data;
+  const points = pointsQuery.data?.points || 0;
+  const messages = messagesQuery.data;
+  const images = imagesQuery.data;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -38,15 +50,15 @@ export default function Dashboard() {
               <p className="text-sm font-medium text-gray-900">{user?.name}</p>
               <p className="text-xs text-gray-600">{user?.email}</p>
             </div>
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <LogOut className="w-4 h-4" />
-              تسجيل الخروج
-            </Button>
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <LogOut className="w-4 h-4" />
+                {t("nav.logout")}
+              </Button>
           </div>
         </div>
       </header>
@@ -63,65 +75,57 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {/* New Chat Card */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-600">{t("chat.messagesLeft")}</span>
                 <MessageSquare className="w-5 h-5 text-blue-600" />
-                محادثة جديدة
               </CardTitle>
-              <CardDescription>ابدأ محادثة جديدة مع المساعد الذكي</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                ابدأ الآن
-              </Button>
+              <p className="text-3xl font-bold text-gray-900">{messages?.remaining || 0}</p>
+              <p className="text-xs text-gray-600 mt-1">{messages?.used || 0} / {messages?.limit || 0} {t("common.used")}</p>
             </CardContent>
           </Card>
 
-          {/* Features Card */}
           <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-600">{t("chat.imagesLeft")}</span>
+                <Image className="w-5 h-5 text-green-600" />
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold text-gray-900">{images?.remaining || 0}</p>
+              <p className="text-xs text-gray-600 mt-1">{images?.used || 0} / {images?.limit || 0} {t("common.used")}</p>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-600">{t("points.balance")}</span>
                 <Zap className="w-5 h-5 text-yellow-600" />
-                المميزات
               </CardTitle>
-              <CardDescription>اكتشف كل ما يمكن للمساعد فعله</CardDescription>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li>✓ إجابات فورية وذكية</li>
-                <li>✓ دعم اللغة العربية</li>
-                <li>✓ محفوظات المحادثات</li>
-              </ul>
+              <p className="text-3xl font-bold text-gray-900">{points}</p>
+              <p className="text-xs text-gray-600 mt-1">نقاط متاحة</p>
             </CardContent>
           </Card>
 
-          {/* Account Card */}
           <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                👤 حسابك
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-600">{t("profile.accountType")}</span>
+                <TrendingUp className="w-5 h-5 text-purple-600" />
               </CardTitle>
-              <CardDescription>معلومات حسابك وإعداداتك</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2 text-sm">
-                <p>
-                  <span className="font-medium text-gray-700">الدور:</span>{" "}
-                  <span className="text-gray-600 capitalize">{user?.role}</span>
-                </p>
-                <p>
-                  <span className="font-medium text-gray-700">تاريخ الانضمام:</span>{" "}
-                  <span className="text-gray-600">
-                    {user?.createdAt
-                      ? new Date(user.createdAt).toLocaleDateString("ar-SA")
-                      : "—"}
-                  </span>
-                </p>
-              </div>
+              <p className="text-3xl font-bold text-gray-900 capitalize">{profile?.accountType || "—"}</p>
+              <p className="text-xs text-gray-600 mt-1">نوع الحساب الحالي</p>
             </CardContent>
           </Card>
         </div>
@@ -130,7 +134,7 @@ export default function Dashboard() {
         <Card className="bg-gradient-to-r from-indigo-50 to-blue-50 border-indigo-200">
           <CardContent className="pt-6">
             <p className="text-gray-700">
-              💡 <strong>نصيحة:</strong> يمكنك طرح أي سؤال وسيقوم Bodrix AI بمساعدتك بأفضل طريقة ممكنة.
+              💡 <strong>{t("common.tip")}:</strong> {t("home.description")}
               جميع محادثاتك محفوظة وآمنة.
             </p>
           </CardContent>

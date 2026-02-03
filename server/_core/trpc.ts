@@ -43,3 +43,67 @@ export const adminProcedure = t.procedure.use(
     });
   }),
 );
+
+// Developer procedure - للمطورين فقط
+export const developerProcedure = t.procedure.use(
+  t.middleware(async opts => {
+    const { ctx, next } = opts;
+
+    if (!ctx.user || ctx.user.accountType !== 'developer') {
+      throw new TRPCError({ code: "FORBIDDEN", message: "Only developers can access this feature" });
+    }
+
+    return next({
+      ctx: {
+        ...ctx,
+        user: ctx.user,
+      },
+    });
+  }),
+);
+
+// Premium procedure - للمشتركين في Premium وما فوق
+export const premiumProcedure = t.procedure.use(
+  t.middleware(async opts => {
+    const { ctx, next } = opts;
+
+    if (!ctx.user) {
+      throw new TRPCError({ code: "UNAUTHORIZED", message: UNAUTHED_ERR_MSG });
+    }
+
+    const validAccounts = ['premium', 'pro', 'developer'];
+    if (!validAccounts.includes(ctx.user.accountType)) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "Premium subscription required" });
+    }
+
+    return next({
+      ctx: {
+        ...ctx,
+        user: ctx.user,
+      },
+    });
+  }),
+);
+
+// Pro procedure - للمشتركين في Pro وما فوق
+export const proProcedure = t.procedure.use(
+  t.middleware(async opts => {
+    const { ctx, next } = opts;
+
+    if (!ctx.user) {
+      throw new TRPCError({ code: "UNAUTHORIZED", message: UNAUTHED_ERR_MSG });
+    }
+
+    const validAccounts = ['pro', 'developer'];
+    if (!validAccounts.includes(ctx.user.accountType)) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "Pro subscription required" });
+    }
+
+    return next({
+      ctx: {
+        ...ctx,
+        user: ctx.user,
+      },
+    });
+  }),
+);
