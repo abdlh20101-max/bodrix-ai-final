@@ -74,9 +74,12 @@ export default function Chat() {
       {/* Header */}
       <div className="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 px-4 py-3 shadow-sm">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-            {t("chat.title")}
-          </h1>
+          <div className="flex items-center gap-2">
+            <img src="https://private-us-east-1.manuscdn.com/sessionFile/cQzbxoLvM4DfATDS98PDwn/sandbox/zfXzIeqSMauFzfB7ElSVwm-img-1_1770162031000_na1fn_Ym9kcml4LWxvZ28.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvY1F6YnhvTHZNNERmQVREUzk4UER3bi9zYW5kYm94L3pmWHpJZXFTTWF1RnpmQjdFbFNWd20taW1nLTFfMTc3MDE2MjAzMTAwMF9uYTFmbl9Ym9kcml4LWxvZ28ucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLHdfMTkyMCxoXzE5MjAvZm9ybWF0LHdlYnAvcXVhbGl0eSxxXzgwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=fCCsBppOdboI29dR8T-AI2txRymrhLYSqI42qLb6QC3hmciDFasJsSJAvHgf~wGr9rvJ~skCWgm8GYmBjBif2ZZPSDw8VmGh6va9SMMb9VDoVe4h9GMbw5xJJe7QS0TtvDr5MRe6~KbRnSO7HZg4BGisMkrM1CJh24383fbzTYpyXRSRcW3NrT-aFLMlkCFGY5VmR7j3cblpdSBq1wMELzLg9R6~02qRd6moL923z5IcFsLDwczFZpuhroUzrNyeFf9ef7GXKEzqVfP9cXpOzbtg4MqQTexADyvjx7vE3W6f8HEs9Gsdcaw0WMaI~jWF4SrDIdZdAblP3ubPorteFg__" alt="Bodrix AI" className="h-8 w-8" />
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+              {t("chat.title")}
+            </h1>
+          </div>
           <div className="flex items-center gap-4">
             <div className="text-sm text-gray-600 dark:text-gray-400">
               <span className="font-semibold text-blue-600">
