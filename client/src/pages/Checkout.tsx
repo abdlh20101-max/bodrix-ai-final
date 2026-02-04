@@ -186,13 +186,16 @@ export default function Checkout() {
                   <strong>{t("checkout.bankName") || "اسم البنك"}:</strong> بنك الراجحي
                 </p>
                 <p className="text-sm text-blue-800 dark:text-blue-300">
-                  <strong>{t("checkout.accountName") || "اسم الحساب"}:</strong> عبدالله الحصيني
+                  <strong>{t("checkout.accountName") || "اسم الحساب"}:</strong> حساب مشفر
                 </p>
                 <p className="text-sm text-blue-800 dark:text-blue-300">
                   <strong>{t("checkout.accountNumber") || "رقم الحساب"}:</strong> XXXX XXXX XXXX
                 </p>
                 <p className="text-sm text-blue-800 dark:text-blue-300">
                   <strong>{t("checkout.ibanNumber") || "رقم IBAN"}:</strong> SA XX XXXX XXXX XXXX XXXX XXXX
+                </p>
+                <p className="text-xs text-blue-600 dark:text-blue-400 mt-3 italic">
+                  تم إخفاء بيانات الحساب لحماية خصوصيتك
                 </p>
               </div>
             </Card>

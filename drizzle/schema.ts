@@ -123,3 +123,49 @@ export const shares = mysqlTable("shares", {
 
 export type Share = typeof shares.$inferSelect;
 export type InsertShare = typeof shares.$inferInsert;
+
+// Wallet Table - جدول المحفظة الإلكترونية
+export const wallets = mysqlTable("wallets", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  balance: varchar("balance", { length: 20 }).default("0.00").notNull(),
+  totalDeposited: varchar("totalDeposited", { length: 20 }).default("0.00").notNull(),
+  totalSpent: varchar("totalSpent", { length: 20 }).default("0.00").notNull(),
+  lastUpdated: timestamp("lastUpdated").defaultNow().onUpdateNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Wallet = typeof wallets.$inferSelect;
+export type InsertWallet = typeof wallets.$inferInsert;
+
+// Wallet Transactions Table - جدول معاملات المحفظة
+export const walletTransactions = mysqlTable("walletTransactions", {
+  id: int("id").autoincrement().primaryKey(),
+  walletId: int("walletId").notNull(),
+  userId: int("userId").notNull(),
+  type: mysqlEnum("type", ["deposit", "withdrawal", "purchase", "refund", "bonus"]).notNull(),
+  amount: varchar("amount", { length: 20 }).notNull(),
+  description: text("description"),
+  status: mysqlEnum("status", ["pending", "completed", "failed", "cancelled"]).default("pending").notNull(),
+  transactionId: varchar("transactionId", { length: 255 }).unique(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+});
+
+export type WalletTransaction = typeof walletTransactions.$inferSelect;
+export type InsertWalletTransaction = typeof walletTransactions.$inferInsert;
+
+// Bank Settings Table - جدول إعدادات البنك (للمسؤول فقط)
+export const bankSettings = mysqlTable("bankSettings", {
+  id: int("id").autoincrement().primaryKey(),
+  bankName: varchar("bankName", { length: 100 }).notNull(),
+  accountName: varchar("accountName", { length: 100 }).notNull(),
+  accountNumber: varchar("accountNumber", { length: 50 }).notNull(),
+  ibanNumber: varchar("ibanNumber", { length: 50 }).notNull(),
+  isActive: int("isActive").default(1).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BankSetting = typeof bankSettings.$inferSelect;
+export type InsertBankSetting = typeof bankSettings.$inferInsert;

@@ -15,6 +15,13 @@
       "when": 1770159800606,
       "tag": "0001_lucky_steve_rogers",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1770175152075,
+      "tag": "0002_flowery_rawhide_kid",
+      "breakpoints": true
     }
   ]
 }

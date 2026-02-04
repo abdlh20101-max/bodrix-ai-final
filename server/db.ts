@@ -10,6 +10,9 @@ import {
   watchedAds,
   referrals,
   shares,
+  wallets,
+  walletTransactions,
+  bankSettings,
   InsertMessage,
   InsertImage,
   InsertPoint,
@@ -17,6 +20,9 @@ import {
   InsertWatchedAd,
   InsertReferral,
   InsertShare,
+  InsertWallet,
+  InsertWalletTransaction,
+  InsertBankSetting,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 

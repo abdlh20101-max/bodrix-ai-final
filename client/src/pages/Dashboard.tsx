@@ -5,7 +5,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdBanner } from "@/components/AdBanner";
-import { LogOut, MessageSquare, Zap, Image, TrendingUp, History as HistoryIcon, CreditCard, Settings, HelpCircle, User } from "lucide-react";
+import { LogOut, MessageSquare, Zap, Image, TrendingUp, History as HistoryIcon, CreditCard, Settings, HelpCircle, User, Wallet as WalletIcon } from "lucide-react";
 import { useLocation } from "wouter";
 import bodrixLogo from "@/assets/bodrix-logo-transparent.png";
 
@@ -211,6 +211,15 @@ export default function Dashboard() {
             >
               <User className="w-8 h-8" />
               <span className="text-sm font-semibold">الملف الشخصي</span>
+            </Button>
+
+            {/* Wallet Button */}
+            <Button
+              onClick={() => navigate("/wallet")}
+              className="h-24 bg-gradient-to-br from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white flex flex-col items-center justify-center gap-2 rounded-lg"
+            >
+              <WalletIcon className="w-8 h-8" />
+              <span className="text-sm font-semibold">محفظتي</span>
             </Button>
           </div>
         </div>
