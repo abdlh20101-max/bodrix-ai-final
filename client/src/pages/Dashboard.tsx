@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { AdBanner } from "@/components/AdBanner";
 import { LogOut, MessageSquare, Zap, Image, TrendingUp } from "lucide-react";
 import { useLocation } from "wouter";
+import bodrixLogo from "@/assets/bodrix-logo-transparent.png";
 
 export default function Dashboard() {
   const { user, logout, loading } = useAuth();
@@ -43,7 +44,7 @@ export default function Dashboard() {
       <header className="bg-card shadow-sm border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <img src="https://private-us-east-1.manuscdn.com/sessionFile/cQzbxoLvM4DfATDS98PDwn/sandbox/g1J1S9pV1XeaVY8DtTzPBi_1770165907673_na1fn_Ym9kcml4LWxvZ28tdHJhbnNwYXJlbnQ.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80" alt="Bodrix AI" className="h-12 w-12" />
+            <img src={bodrixLogo} alt="Bodrix AI" className="h-12 w-12 object-contain" />
             <div>
               <h1 className="text-2xl font-bold text-foreground">Bodrix AI</h1>
               <p className="text-sm text-muted-foreground">مساعدك الذكي</p>
