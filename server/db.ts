@@ -225,6 +225,48 @@ export async function getUserPointsHistory(userId: number, limit: number = 50) {
     .limit(limit);
 }
 
+// Add this function after line 227 (before DAILY LIMIT FUNCTIONS comment)
+
+/**
+ * Calculate total daily message limit including ad bonuses
+ * Base: 20 messages for free users
+ * Bonus: +10 messages per watched ad (today)
+ * Unlimited for premium/pro users
+ */
+export async function calculateMessageLimit(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const user = await getUserById(userId);
+  if (!user) throw new Error("User not found");
+
+  // If user has subscription, unlimited
+  if (user.accountType !== "free") {
+    return 999999;
+  }
+
+  // Base limit for free users: 20 messages
+  let baseLimit = 20;
+
+  // Count ads watched today
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const adsWatchedToday = await db
+    .select()
+    .from(watchedAds)
+    .where(
+      and(
+        eq(watchedAds.userId, userId),
+        gte(watchedAds.watchedAt, today)
+      )
+    );
+
+  // Add 10 messages per ad watched
+  const adBonus = adsWatchedToday.length * 10;
+
+  return baseLimit + adBonus;
+}
 // ============ DAILY LIMIT FUNCTIONS ============
 
 export async function checkDailyLimit(userId: number, type: "messages" | "images") {
