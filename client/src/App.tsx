@@ -33,6 +33,13 @@ import Analytics from "./pages/Analytics";
 import Collaboration from "./pages/Collaboration";
 import Automation from "./pages/Automation";
 import Integrations from "./pages/Integrations";
+import Ratings from "./pages/Ratings";
+import PersonalStats from "./pages/PersonalStats";
+import Certificates from "./pages/Certificates";
+import Achievements from "./pages/Achievements";
+import Challenges from "./pages/Challenges";
+import Leaderboard from "./pages/Leaderboard";
+import Rewards from "./pages/Rewards";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -89,6 +96,13 @@ function Router() {
       <Route path="/collaboration" component={() => <ProtectedRoute component={Collaboration} />} />
       <Route path="/automation" component={() => <ProtectedRoute component={Automation} />} />
       <Route path="/integrations" component={() => <ProtectedRoute component={Integrations} />} />
+      <Route path="/ratings" component={() => <ProtectedRoute component={Ratings} />} />
+      <Route path="/personal-stats" component={() => <ProtectedRoute component={PersonalStats} />} />
+      <Route path="/certificates" component={() => <ProtectedRoute component={Certificates} />} />
+      <Route path="/achievements" component={() => <ProtectedRoute component={Achievements} />} />
+      <Route path="/challenges" component={() => <ProtectedRoute component={Challenges} />} />
+      <Route path="/leaderboard" component={() => <ProtectedRoute component={Leaderboard} />} />
+      <Route path="/rewards" component={() => <ProtectedRoute component={Rewards} />} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
