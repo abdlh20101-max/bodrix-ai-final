@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Check } from "lucide-react";
 import { useLocation } from "wouter";
+import { AdManager } from "@/components/AdManager";
+import { AdBannerTop } from "@/components/AdBannerTop";
 
 export default function Plans() {
   const { t, language } = useLanguage();
@@ -121,6 +123,7 @@ export default function Plans() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800 py-12 px-4">
+      <AdBannerTop />
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">

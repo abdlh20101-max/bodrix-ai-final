@@ -6,6 +6,8 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Trash2, Search, MessageCircle, SearchIcon, Star, HardDrive } from "lucide-react";
 import { useLocation } from "wouter";
+import { AdManager } from "@/components/AdManager";
+import { AdBannerTop } from "@/components/AdBannerTop";
 
 export default function History() {
   const { t, language } = useLanguage();
@@ -45,6 +47,7 @@ export default function History() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800 py-8 px-4">
+      <AdBannerTop />
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">

@@ -6,6 +6,8 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Plus, Minus, Send } from "lucide-react";
 import { useLocation } from "wouter";
+import { AdManager } from "@/components/AdManager";
+import { AdBannerTop } from "@/components/AdBannerTop";
 
 export default function Wallet() {
   const { t, language } = useLanguage();
@@ -88,6 +90,7 @@ export default function Wallet() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-8 px-4">
+      <AdBannerTop />
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8 flex items-center gap-4">
