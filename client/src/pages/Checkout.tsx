@@ -1,18 +1,112 @@
 import { useLanguage } from "@/_core/hooks/useLanguage";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Clock } from "lucide-react";
+import { ArrowLeft, Check, Zap } from "lucide-react";
 import { useLocation } from "wouter";
+import { useState } from "react";
+import { toast } from "sonner";
+
+interface Plan {
+  id: string;
+  name: string;
+  price: number;
+  currency: string;
+  days: number;
+  features: string[];
+  popular?: boolean;
+}
+
+const PLANS: Plan[] = [
+  {
+    id: "premium_week",
+    name: "Premium أسبوع",
+    price: 9.99,
+    currency: "USD",
+    days: 7,
+    features: [
+      "رسائل غير محدودة",
+      "أولوية في الدعم",
+      "إزالة الإعلانات",
+      "مميزات متقدمة",
+    ],
+  },
+  {
+    id: "premium_month",
+    name: "Premium شهر",
+    price: 29.99,
+    currency: "USD",
+    days: 30,
+    features: [
+      "رسائل غير محدودة",
+      "أولوية في الدعم",
+      "إزالة الإعلانات",
+      "مميزات متقدمة",
+      "تحليلات متقدمة",
+    ],
+    popular: true,
+  },
+  {
+    id: "premium_year",
+    name: "Premium سنة",
+    price: 99.99,
+    currency: "USD",
+    days: 365,
+    features: [
+      "رسائل غير محدودة",
+      "أولوية في الدعم",
+      "إزالة الإعلانات",
+      "مميزات متقدمة",
+      "تحليلات متقدمة",
+      "دعم 24/7",
+    ],
+  },
+];
 
 export default function Checkout() {
-  const { t } = useLanguage();
+  const { language } = useLanguage();
+  const { user } = useAuth();
   const [, navigate] = useLocation();
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const createPayPalSubscriptionMutation = trpc.subscriptions.create.useMutation({
+    onSuccess: () => {
+      toast.success(language === "ar" ? "تم إنشاء الاشتراك بنجاح" : "Subscription created successfully");
+      navigate("/dashboard");
+    },
+    onError: (error) => {
+      toast.error(error.message || (language === "ar" ? "حدث خطأ" : "An error occurred"));
+      setIsLoading(false);
+    },
+  });
+
+  const handleSubscribe = async (planId: string) => {
+    if (!user) {
+      navigate("/");
+      return;
+    }
+
+    setSelectedPlan(planId);
+    setIsLoading(true);
+
+    try {
+      await createPayPalSubscriptionMutation.mutateAsync({
+        planType: planId as any,
+        paymentMethod: "paypal",
+        transactionId: `TXN-${Date.now()}`,
+      });
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="mb-8 flex items-center gap-4">
+        <div className="mb-12 flex items-center gap-4">
           <Button
             variant="ghost"
             onClick={() => navigate("/dashboard")}
@@ -22,61 +116,130 @@ export default function Checkout() {
           </Button>
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              خدمة الدفع
+              {language === "ar" ? "الخطط والاشتراكات" : "Plans & Subscriptions"}
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              نظام الدفع قيد الإعداد
+              {language === "ar"
+                ? "اختر الخطة المناسبة لك"
+                : "Choose the right plan for you"}
             </p>
           </div>
         </div>
 
-        {/* Coming Soon Card */}
-        <Card className="p-12 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-center">
-          <div className="flex justify-center mb-6">
-            <div className="p-4 bg-yellow-100 dark:bg-yellow-900/20 rounded-full">
-              <Clock className="w-12 h-12 text-yellow-600 dark:text-yellow-400" />
+        {/* Plans Grid */}
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
+          {PLANS.map((plan) => (
+            <Card
+              key={plan.id}
+              className={`relative p-8 transition-all ${
+                plan.popular
+                  ? "border-2 border-blue-500 shadow-lg scale-105"
+                  : "border border-gray-200 dark:border-slate-700"
+              } bg-white dark:bg-slate-800`}
+            >
+              {plan.popular && (
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                    {language === "ar" ? "الأكثر شيوعاً" : "Most Popular"}
+                  </span>
+                </div>
+              )}
+
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                {plan.name}
+              </h3>
+
+              <div className="mb-6">
+                <span className="text-4xl font-bold text-gray-900 dark:text-white">
+                  ${plan.price}
+                </span>
+                <span className="text-gray-600 dark:text-gray-400 ml-2">
+                  {language === "ar" ? `لمدة ${plan.days} يوم` : `for ${plan.days} days`}
+                </span>
+              </div>
+
+              <div className="space-y-4 mb-8">
+                {plan.features.map((feature, idx) => (
+                  <div key={idx} className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-700 dark:text-gray-300">
+                      {feature}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <Button
+                onClick={() => handleSubscribe(plan.id)}
+                disabled={isLoading && selectedPlan === plan.id}
+                className={`w-full py-3 font-semibold ${
+                  plan.popular
+                    ? "bg-blue-600 hover:bg-blue-700 text-white"
+                    : "bg-gray-200 hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-900 dark:text-white"
+                }`}
+              >
+                {isLoading && selectedPlan === plan.id ? (
+                  <span className="flex items-center gap-2">
+                    <span className="animate-spin">⏳</span>
+                    {language === "ar" ? "جاري المعالجة..." : "Processing..."}
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <Zap className="w-4 h-4" />
+                    {language === "ar" ? "اشترك الآن" : "Subscribe Now"}
+                  </span>
+                )}
+              </Button>
+            </Card>
+          ))}
+        </div>
+
+        {/* FAQ Section */}
+        <Card className="p-8 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+            {language === "ar" ? "الأسئلة الشائعة" : "Frequently Asked Questions"}
+          </h2>
+
+          <div className="space-y-6">
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                {language === "ar"
+                  ? "هل يمكنني إلغاء الاشتراك؟"
+                  : "Can I cancel my subscription?"}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                {language === "ar"
+                  ? "نعم، يمكنك إلغاء الاشتراك في أي وقت من لوحة التحكم"
+                  : "Yes, you can cancel your subscription anytime from the dashboard"}
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                {language === "ar"
+                  ? "ما هي طرق الدفع المتاحة؟"
+                  : "What payment methods are available?"}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                {language === "ar"
+                  ? "نحن نقبل جميع بطاقات الائتمان والخصم عبر PayPal"
+                  : "We accept all credit and debit cards via PayPal"}
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                {language === "ar"
+                  ? "هل هناك فترة تجريبية مجانية؟"
+                  : "Is there a free trial period?"}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                {language === "ar"
+                  ? "لا، لكن يمكنك استخدام النسخة المجانية بدون حد"
+                  : "No, but you can use the free version without limits"}
+              </p>
             </div>
           </div>
-          
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            قريباً جداً! ⏳
-          </h2>
-          
-          <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
-            نظام الدفع والاشتراكات قيد الإعداد حالياً
-          </p>
-
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-8 text-left">
-            <h3 className="font-semibold text-blue-900 dark:text-blue-200 mb-3">
-              ✅ ما هو متاح الآن:
-            </h3>
-            <ul className="space-y-2 text-sm text-blue-800 dark:text-blue-300">
-              <li>✓ محادثات غير محدودة مع AI</li>
-              <li>✓ الإعلانات والأرباح (Monetag)</li>
-              <li>✓ نظام الإحالات</li>
-              <li>✓ المحفظة الإلكترونية</li>
-              <li>✓ جميع المميزات الأساسية</li>
-            </ul>
-          </div>
-
-          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 mb-8 text-left">
-            <h3 className="font-semibold text-green-900 dark:text-green-200 mb-3">
-              🚀 قريباً:
-            </h3>
-            <ul className="space-y-2 text-sm text-green-800 dark:text-green-300">
-              <li>✓ نظام الدفع والاشتراكات</li>
-              <li>✓ خطط مميزة</li>
-              <li>✓ مميزات متقدمة</li>
-              <li>✓ سحب الأرباح</li>
-            </ul>
-          </div>
-
-          <Button
-            onClick={() => navigate("/dashboard")}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold"
-          >
-            العودة إلى لوحة التحكم
-          </Button>
         </Card>
       </div>
     </div>
