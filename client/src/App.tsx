@@ -40,6 +40,9 @@ import Achievements from "./pages/Achievements";
 import Challenges from "./pages/Challenges";
 import Leaderboard from "./pages/Leaderboard";
 import Rewards from "./pages/Rewards";
+import AdvancedNotifications from "./pages/AdvancedNotifications";
+import InAppPurchase from "./pages/InAppPurchase";
+import AdvancedReferrals from "./pages/AdvancedReferrals";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -103,6 +106,9 @@ function Router() {
       <Route path="/challenges" component={() => <ProtectedRoute component={Challenges} />} />
       <Route path="/leaderboard" component={() => <ProtectedRoute component={Leaderboard} />} />
       <Route path="/rewards" component={() => <ProtectedRoute component={Rewards} />} />
+      <Route path="/advanced-notifications" component={() => <ProtectedRoute component={AdvancedNotifications} />} />
+      <Route path="/in-app-purchase" component={() => <ProtectedRoute component={InAppPurchase} />} />
+      <Route path="/advanced-referrals" component={() => <ProtectedRoute component={AdvancedReferrals} />} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
