@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { AdBanner } from "@/components/AdBanner";
 import { AdBannerTop } from "@/components/AdBannerTop";
 import { AdsterraAd } from "@/components/Adsterra";
+import { SmartNotification } from "@/components/SmartNotification";
 import { LogOut, MessageSquare, Zap, Image, TrendingUp, History as HistoryIcon, CreditCard, Settings, HelpCircle, User, Wallet as WalletIcon, Share2, Play, Shield } from "lucide-react";
 import { useLocation } from "wouter";
 import bodrixLogo from "@/assets/bodrix-logo-transparent.png";
@@ -52,6 +53,9 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Smart Notification for Low Messages */}
+      <SmartNotification messagesLeft={messages?.remaining || 0} language="ar" />
+      
       {/* Top Ad Banner */}
       <AdBannerTop />
 

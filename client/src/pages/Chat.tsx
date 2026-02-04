@@ -1,10 +1,11 @@
-import { useLanguage } from "@/_core/hooks/useLanguage";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { AdBannerTop } from "@/components/AdBannerTop";
 import { AdsterraAd } from "@/components/Adsterra";
+import { SmartNotification } from "@/components/SmartNotification";
+import { OutOfMessagesNotification } from "@/components/OutOfMessagesNotification";
 import { Loader2, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -20,7 +21,12 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [messagesRemaining, setMessagesRemaining] = useState(20);
+  const [showOutOfMessagesModal, setShowOutOfMessagesModal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Query to get remaining messages
+  const { data: remainingData } = trpc.messages.getRemainingToday.useQuery();
 
   const trpcUtils = trpc.useUtils();
   
@@ -45,6 +51,16 @@ export default function Chat() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    if (remainingData) {
+      setMessagesRemaining(remainingData.remaining);
+      // Show out of messages modal if remaining is 0
+      if (remainingData.remaining === 0) {
+        setShowOutOfMessagesModal(true);
+      }
+    }
+  }, [remainingData]);
 
   const handleSendMessage = async () => {
     if (!input.trim()) return;
@@ -142,6 +158,16 @@ export default function Chat() {
         )}
         <div ref={messagesEndRef} />
       </div>
+      <SmartNotification messagesLeft={messagesRemaining} language={language as 'ar' | 'en'} />
+      <OutOfMessagesNotification
+        isOpen={showOutOfMessagesModal}
+        onDismiss={() => setShowOutOfMessagesModal(false)}
+        onWatchAd={() => {
+          // TODO: Implement ad watching logic
+          setShowOutOfMessagesModal(false);
+        }}
+        language={language as 'ar' | 'en'}
+      />
       <AdsterraAd />
       <div className="border-t border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-slate-800">
         <div className="flex gap-2">
@@ -168,4 +194,18 @@ export default function Chat() {
       </div>
     </div>
   );
+}
+
+// Hook to get language (fallback if not available)
+function useLanguage() {
+  const [language, setLanguage] = useState<'ar' | 'en'>('ar');
+  
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('language') as 'ar' | 'en' | null;
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
+  
+  return { language };
 }

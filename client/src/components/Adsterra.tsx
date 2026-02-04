@@ -26,8 +26,8 @@ export function AdsterraAd() {
   }, []);
 
   return (
-    <div className="flex justify-center my-6">
-      <div id="adsterra-container" className="w-full max-w-2xl">
+    <div className="flex justify-center my-8 px-4">
+      <div id="adsterra-container" className="w-full max-w-2xl rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-2">
         {/* Adsterra ad will be injected here */}
       </div>
     </div>
