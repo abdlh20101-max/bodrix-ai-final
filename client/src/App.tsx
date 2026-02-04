@@ -17,6 +17,7 @@ import Checkout from "./pages/Checkout";
 import Wallet from "./pages/Wallet";
 import Referrals from "./pages/Referrals";
 import Ads from "./pages/Ads";
+import AdminDashboard from "./pages/AdminDashboard";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -57,6 +58,7 @@ function Router() {
       <Route path="/wallet" component={() => <ProtectedRoute component={Wallet} />} />
       <Route path="/referrals" component={() => <ProtectedRoute component={Referrals} />} />
       <Route path="/ads" component={() => <ProtectedRoute component={Ads} />} />
+      <Route path="/admin" component={() => <ProtectedRoute component={AdminDashboard} />} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

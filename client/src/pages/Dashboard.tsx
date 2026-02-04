@@ -5,7 +5,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdBanner } from "@/components/AdBanner";
-import { LogOut, MessageSquare, Zap, Image, TrendingUp, History as HistoryIcon, CreditCard, Settings, HelpCircle, User, Wallet as WalletIcon, Share2, Play } from "lucide-react";
+import { LogOut, MessageSquare, Zap, Image, TrendingUp, History as HistoryIcon, CreditCard, Settings, HelpCircle, User, Wallet as WalletIcon, Share2, Play, Shield } from "lucide-react";
 import { useLocation } from "wouter";
 import bodrixLogo from "@/assets/bodrix-logo-transparent.png";
 
@@ -239,6 +239,16 @@ export default function Dashboard() {
               <Play className="w-8 h-8" />
               <span className="text-sm font-semibold">الإعلانات</span>
             </Button>
+
+            {user?.role === "admin" && (
+              <Button
+                onClick={() => navigate("/admin")}
+                className="h-24 bg-gradient-to-br from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white flex flex-col items-center justify-center gap-2 rounded-lg"
+              >
+                <Shield className="w-8 h-8" />
+                <span className="text-sm font-semibold">لوحة التحكم</span>
+              </Button>
+            )}
           </div>
         </div>
 
