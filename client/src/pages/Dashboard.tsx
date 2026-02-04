@@ -281,13 +281,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Ad Banner */}
-        <div className="my-8">
-          <AdBanner type="horizontal" />
-        </div>
-
-        {/* Info Banner */}
-        <Card className="bg-gradient-to-r from-indigo-50 to-blue-50 border-indigo-200">
+        {/* Info Banner - Moved before ad banner */}
+        <Card className="bg-gradient-to-r from-indigo-50 to-blue-50 border-indigo-200 mb-8">
           <CardContent className="pt-6">
             <p className="text-gray-700">
               💡 <strong>{t("common.tip")}:</strong> {t("home.description")}
@@ -295,6 +290,11 @@ export default function Dashboard() {
             </p>
           </CardContent>
         </Card>
+
+        {/* Ad Banner - Moved to bottom */}
+        <div className="my-8">
+          <AdBanner type="horizontal" />
+        </div>
       </main>
     </div>
   );
