@@ -168,7 +168,6 @@ export default function Chat() {
         }}
         language={language as 'ar' | 'en'}
       />
-      <AdManager />
       <div className="border-t border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-slate-800">
         <div className="flex gap-2">
           <Input
