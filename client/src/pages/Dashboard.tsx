@@ -38,15 +38,15 @@ export default function Dashboard() {
   const images = imagesQuery.data;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-card shadow-sm border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <img src="https://private-us-east-1.manuscdn.com/sessionFile/cQzbxoLvM4DfATDS98PDwn/sandbox/zfXzIeqSMauFzfB7ElSVwm-img-1_1770162031000_na1fn_Ym9kcml4LWxvZ28.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvY1F6YnhvTHZNNERmQVREUzk4UER3bi9zYW5kYm94L3pmWHpJZXFTTWF1RnpmQjdFbFNWd20taW1nLTFfMTc3MDE2MjAzMTAwMF9uYTFmbl9Ym9kcml4LWxvZ28ucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLHdfMTkyMCxoXzE5MjAvZm9ybWF0LHdlYnAvcXVhbGl0eSxxXzgwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=fCCsBppOdboI29dR8T-AI2txRymrhLYSqI42qLb6QC3hmciDFasJsSJAvHgf~wGr9rvJ~skCWgm8GYmBjBif2ZZPSDw8VmGh6va9SMMb9VDoVe4h9GMbw5xJJe7QS0TtvDr5MRe6~KbRnSO7HZg4BGisMkrM1CJh24383fbzTYpyXRSRcW3NrT-aFLMlkCFGY5VmR7j3cblpdSBq1wMELzLg9R6~02qRd6moL923z5IcFsLDwczFZpuhroUzrNyeFf9ef7GXKEzqVfP9cXpOzbtg4MqQTexADyvjx7vE3W6f8HEs9Gsdcaw0WMaI~jWF4SrDIdZdAblP3ubPorteFg__" alt="Bodrix AI" className="h-10 w-10" />
+            <img src="https://private-us-east-1.manuscdn.com/sessionFile/cQzbxoLvM4DfATDS98PDwn/sandbox/g1J1S9pV1XeaVY8DtTzPBi_1770165907673_na1fn_Ym9kcml4LWxvZ28tdHJhbnNwYXJlbnQ.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80" alt="Bodrix AI" className="h-12 w-12" />
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Bodrix AI</h1>
-              <p className="text-sm text-gray-600">مساعدك الذكي</p>
+              <h1 className="text-2xl font-bold text-foreground">Bodrix AI</h1>
+              <p className="text-sm text-muted-foreground">مساعدك الذكي</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -116,7 +116,7 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold text-gray-900">{points}</p>
-              <p className="text-xs text-gray-600 mt-1">نقاط متاحة</p>
+              <p className="text-xs text-gray-600 mt-1">{t('points.balance')}</p>
             </CardContent>
           </Card>
 
@@ -129,7 +129,7 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold text-gray-900 capitalize">{profile?.accountType || "—"}</p>
-              <p className="text-xs text-gray-600 mt-1">نوع الحساب الحالي</p>
+              <p className="text-xs text-gray-600 mt-1">{t('profile.accountType')}</p>
             </CardContent>
           </Card>
         </div>

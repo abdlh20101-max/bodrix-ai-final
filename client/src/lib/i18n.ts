@@ -100,6 +100,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'common.yes': 'نعم',
     'common.no': 'لا',
     'common.ok': 'حسناً',
+    'common.used': 'مستخدم',
+    'common.tip': 'نصيحة',
   },
   en: {
     // Navigation
@@ -199,6 +201,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'common.yes': 'Yes',
     'common.no': 'No',
     'common.ok': 'OK',
+    'common.used': 'Used',
+    'common.tip': 'Tip',
   },
 };
 

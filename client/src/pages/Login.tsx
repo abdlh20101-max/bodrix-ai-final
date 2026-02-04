@@ -9,7 +9,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-2 text-center">
           <CardTitle className="text-3xl font-bold">Bodrix AI</CardTitle>
@@ -26,7 +26,7 @@ export default function Login() {
 
           <Button
             onClick={handleGoogleLogin}
-            className="w-full h-12 text-base font-semibold flex items-center justify-center gap-2 bg-white text-gray-700 border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
+            className="w-full h-12 text-base font-semibold flex items-center justify-center gap-2 bg-primary text-primary-foreground border-2 border-primary hover:bg-primary/90"
           >
             <Chrome className="w-5 h-5" />
             تسجيل الدخول عبر Google
@@ -34,15 +34,15 @@ export default function Login() {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
+              <div className="w-full border-t border-border"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">أو</span>
+              <span className="px-2 bg-card text-muted-foreground">أو</span>
             </div>
           </div>
 
-          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-            <p className="text-sm text-blue-900">
+          <div className="bg-card p-4 rounded-lg border border-border">
+            <p className="text-sm text-foreground">
               🔐 نستخدم Google للمصادقة الآمنة. بيانات حسابك محمية بالكامل.
             </p>
           </div>
