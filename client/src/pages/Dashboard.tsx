@@ -49,10 +49,24 @@ export default function Dashboard() {
               <p className="text-sm text-muted-foreground">مساعدك الذكي</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate("/settings")}
+              className="p-2 hover:bg-muted rounded-lg transition"
+              title="الإعدادات"
+            >
+              ⚙️
+            </button>
+            <button
+              onClick={() => navigate("/faq")}
+              className="p-2 hover:bg-muted rounded-lg transition"
+              title="الأسئلة الشائعة"
+            >
+              ❓
+            </button>
             <div className="text-right">
-              <p className="text-sm font-medium text-gray-900">{user?.name}</p>
-              <p className="text-xs text-gray-600">{user?.email}</p>
+              <p className="text-sm font-medium text-foreground">{user?.name}</p>
+              <p className="text-xs text-muted-foreground">{user?.email}</p>
             </div>
               <Button
                 onClick={handleLogout}

@@ -10,6 +10,8 @@ import Dashboard from "./pages/Dashboard";
 import Chat from "./pages/Chat";
 import Plans from "./pages/Plans";
 import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
+import FAQ from "./pages/FAQ";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -43,6 +45,8 @@ function Router() {
       <Route path="/chat" component={() => <ProtectedRoute component={Chat} />} />
       <Route path="/plans" component={() => <ProtectedRoute component={Plans} />} />
       <Route path="/profile" component={() => <ProtectedRoute component={Profile} />} />
+      <Route path="/settings" component={() => <ProtectedRoute component={Settings} />} />
+      <Route path="/faq" component={() => <ProtectedRoute component={FAQ} />} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
