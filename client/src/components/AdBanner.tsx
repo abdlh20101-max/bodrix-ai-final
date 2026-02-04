@@ -13,11 +13,11 @@ export function AdBanner({ type = "horizontal", className = "" }: AdBannerProps)
     script.src = "https://cdn.propellerads.com/js/ads.js";
     script.onload = () => {
       // Initialize Propeller Ads
-      if (window._pa) {
-        window._pa.init({
-          siteId: "YOUR_SITE_ID", // Replace with your Propeller Ads site ID
-        });
-      }
+        if (window._pa) {
+          window._pa.init({
+            siteId: "3218489", // Bodrix AI Site ID
+          });
+        }
     };
     document.body.appendChild(script);
 
