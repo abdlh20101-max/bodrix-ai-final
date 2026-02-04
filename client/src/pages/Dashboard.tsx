@@ -5,7 +5,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdBanner } from "@/components/AdBanner";
-import { LogOut, MessageSquare, Zap, Image, TrendingUp, History as HistoryIcon } from "lucide-react";
+import { LogOut, MessageSquare, Zap, Image, TrendingUp, History as HistoryIcon, CreditCard, Settings, HelpCircle, User } from "lucide-react";
 import { useLocation } from "wouter";
 import bodrixLogo from "@/assets/bodrix-logo-transparent.png";
 
@@ -171,6 +171,71 @@ export default function Dashboard() {
               <p className="text-xs text-gray-600 mt-1">{t('profile.accountType')}</p>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Quick Actions Grid */}
+        <div className="mb-8">
+          <h3 className="text-xl font-bold text-foreground mb-4">الخيارات السريعة</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Chat Button */}
+            <Button
+              onClick={() => navigate("/chat")}
+              className="h-24 bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white flex flex-col items-center justify-center gap-2 rounded-lg"
+            >
+              <MessageSquare className="w-8 h-8" />
+              <span className="text-sm font-semibold">محادثة جديدة</span>
+            </Button>
+
+            {/* Plans Button */}
+            <Button
+              onClick={() => navigate("/plans")}
+              className="h-24 bg-gradient-to-br from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white flex flex-col items-center justify-center gap-2 rounded-lg"
+            >
+              <CreditCard className="w-8 h-8" />
+              <span className="text-sm font-semibold">الخطط والباقات</span>
+            </Button>
+
+            {/* History Button */}
+            <Button
+              onClick={() => navigate("/history")}
+              className="h-24 bg-gradient-to-br from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white flex flex-col items-center justify-center gap-2 rounded-lg"
+            >
+              <HistoryIcon className="w-8 h-8" />
+              <span className="text-sm font-semibold">سجل المحادثات</span>
+            </Button>
+
+            {/* Profile Button */}
+            <Button
+              onClick={() => navigate("/profile")}
+              className="h-24 bg-gradient-to-br from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white flex flex-col items-center justify-center gap-2 rounded-lg"
+            >
+              <User className="w-8 h-8" />
+              <span className="text-sm font-semibold">الملف الشخصي</span>
+            </Button>
+          </div>
+        </div>
+
+        {/* Additional Actions */}
+        <div className="mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Settings Button */}
+            <Button
+              onClick={() => navigate("/settings")}
+              className="h-20 bg-gradient-to-br from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white flex flex-col items-center justify-center gap-2 rounded-lg"
+            >
+              <Settings className="w-8 h-8" />
+              <span className="text-sm font-semibold">الإعدادات</span>
+            </Button>
+
+            {/* FAQ Button */}
+            <Button
+              onClick={() => navigate("/faq")}
+              className="h-20 bg-gradient-to-br from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white flex flex-col items-center justify-center gap-2 rounded-lg"
+            >
+              <HelpCircle className="w-8 h-8" />
+              <span className="text-sm font-semibold">الأسئلة الشائعة</span>
+            </Button>
+          </div>
         </div>
 
         {/* Ad Banner */}
