@@ -282,6 +282,24 @@ class SDKServer {
           lastSignedIn: signedInAt,
         });
         user = await db.getUserByOpenId(userInfo.openId);
+        
+        // Create wallet automatically for new user
+        if (user) {
+          try {
+            const walletDb = await db.getDb();
+            if (walletDb) {
+              const { wallets } = await import("../../drizzle/schema");
+              await walletDb.insert(wallets).values({
+                userId: user.id,
+                balance: "10.00",
+                totalDeposited: "10.00",
+                totalSpent: "0.00",
+              }).catch(() => {});
+            }
+          } catch (walletError) {
+            console.warn("[Wallet] Failed to create wallet:", walletError);
+          }
+        }
       } catch (error) {
         console.error("[Auth] Failed to sync user from OAuth:", error);
         throw ForbiddenError("Failed to sync user info");
