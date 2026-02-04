@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { AdBannerTop } from "@/components/AdBannerTop";
-import { AdsterraAd } from "@/components/Adsterra";
+import { AdManager } from "@/components/AdManager";
 import { SmartNotification } from "@/components/SmartNotification";
 import { OutOfMessagesNotification } from "@/components/OutOfMessagesNotification";
 import { Loader2, Send } from "lucide-react";
@@ -168,7 +168,7 @@ export default function Chat() {
         }}
         language={language as 'ar' | 'en'}
       />
-      <AdsterraAd />
+      <AdManager />
       <div className="border-t border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-slate-800">
         <div className="flex gap-2">
           <Input

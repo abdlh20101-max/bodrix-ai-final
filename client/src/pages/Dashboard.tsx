@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdBanner } from "@/components/AdBanner";
 import { AdBannerTop } from "@/components/AdBannerTop";
-import { AdsterraAd } from "@/components/Adsterra";
+import { AdManager } from "@/components/AdManager";
 import { SmartNotification } from "@/components/SmartNotification";
 import { LogOut, MessageSquare, Zap, Image, TrendingUp, History as HistoryIcon, CreditCard, Settings, HelpCircle, User, Wallet as WalletIcon, Share2, Play, Shield } from "lucide-react";
 import { useLocation } from "wouter";
@@ -296,8 +296,8 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Adsterra Ad Banner */}
-        <AdsterraAd />
+        {/* Ad Manager - Multiple Networks */}
+        <AdManager />
       </main>
     </div>
   );
