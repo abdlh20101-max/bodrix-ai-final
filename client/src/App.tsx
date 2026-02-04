@@ -15,6 +15,8 @@ import FAQ from "./pages/FAQ";
 import History from "./pages/History";
 import Checkout from "./pages/Checkout";
 import Wallet from "./pages/Wallet";
+import Referrals from "./pages/Referrals";
+import Ads from "./pages/Ads";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -53,6 +55,8 @@ function Router() {
       <Route path="/history" component={() => <ProtectedRoute component={History} />} />
       <Route path="/checkout" component={() => <ProtectedRoute component={Checkout} />} />
       <Route path="/wallet" component={() => <ProtectedRoute component={Wallet} />} />
+      <Route path="/referrals" component={() => <ProtectedRoute component={Referrals} />} />
+      <Route path="/ads" component={() => <ProtectedRoute component={Ads} />} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

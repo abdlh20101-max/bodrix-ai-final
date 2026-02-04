@@ -5,7 +5,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdBanner } from "@/components/AdBanner";
-import { LogOut, MessageSquare, Zap, Image, TrendingUp, History as HistoryIcon, CreditCard, Settings, HelpCircle, User, Wallet as WalletIcon } from "lucide-react";
+import { LogOut, MessageSquare, Zap, Image, TrendingUp, History as HistoryIcon, CreditCard, Settings, HelpCircle, User, Wallet as WalletIcon, Share2, Play } from "lucide-react";
 import { useLocation } from "wouter";
 import bodrixLogo from "@/assets/bodrix-logo-transparent.png";
 
@@ -220,6 +220,24 @@ export default function Dashboard() {
             >
               <WalletIcon className="w-8 h-8" />
               <span className="text-sm font-semibold">محفظتي</span>
+            </Button>
+
+            {/* Referrals Button */}
+            <Button
+              onClick={() => navigate("/referrals")}
+              className="h-24 bg-gradient-to-br from-cyan-600 to-cyan-700 hover:from-cyan-700 hover:to-cyan-800 text-white flex flex-col items-center justify-center gap-2 rounded-lg"
+            >
+              <Share2 className="w-8 h-8" />
+              <span className="text-sm font-semibold">الإحالات</span>
+            </Button>
+
+            {/* Ads Button */}
+            <Button
+              onClick={() => navigate("/ads")}
+              className="h-24 bg-gradient-to-br from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white flex flex-col items-center justify-center gap-2 rounded-lg"
+            >
+              <Play className="w-8 h-8" />
+              <span className="text-sm font-semibold">الإعلانات</span>
             </Button>
           </div>
         </div>
