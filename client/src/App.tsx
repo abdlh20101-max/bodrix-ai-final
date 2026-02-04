@@ -27,6 +27,9 @@ import EmailNotifications from "./pages/EmailNotifications";
 import Support from "./pages/Support";
 import Tags from "./pages/Tags";
 import Export from "./pages/Export";
+import RealTimeNotifications from "./pages/RealTimeNotifications";
+import Translation from "./pages/Translation";
+import Analytics from "./pages/Analytics";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -77,6 +80,9 @@ function Router() {
       <Route path="/support" component={() => <ProtectedRoute component={Support} />} />
       <Route path="/tags" component={() => <ProtectedRoute component={Tags} />} />
       <Route path="/export" component={() => <ProtectedRoute component={Export} />} />
+      <Route path="/real-time-notifications" component={() => <ProtectedRoute component={RealTimeNotifications} />} />
+      <Route path="/translation" component={() => <ProtectedRoute component={Translation} />} />
+      <Route path="/analytics" component={() => <ProtectedRoute component={Analytics} />} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
