@@ -4,10 +4,12 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Trash2, Search, MessageCircle } from "lucide-react";
+import { Trash2, Search, MessageCircle, SearchIcon, Star, HardDrive } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function History() {
   const { t, language } = useLanguage();
+  const [, navigate] = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<"all" | "user" | "assistant">("all");
 
@@ -154,6 +156,36 @@ export default function History() {
           )}
         </div>
 
+        {/* Quick Actions */}
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Search Button */}
+          <Button
+            onClick={() => navigate("/search")}
+            className="h-24 bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white flex flex-col items-center justify-center gap-2 rounded-lg"
+          >
+            <Search className="w-8 h-8" />
+            <span className="text-sm font-semibold">بحث</span>
+          </Button>
+
+          {/* Reviews Button */}
+          <Button
+            onClick={() => navigate("/reviews")}
+            className="h-24 bg-gradient-to-br from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white flex flex-col items-center justify-center gap-2 rounded-lg"
+          >
+            <Star className="w-8 h-8" />
+            <span className="text-sm font-semibold">التقييمات</span>
+          </Button>
+
+          {/* Backups Button */}
+          <Button
+            onClick={() => navigate("/backups")}
+            className="h-24 bg-gradient-to-br from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white flex flex-col items-center justify-center gap-2 rounded-lg"
+          >
+            <HardDrive className="w-8 h-8" />
+            <span className="text-sm font-semibold">النسخ الاحتياطية</span>
+          </Button>
+        </div>
+
         {/* Stats */}
         <Card className="mt-8 p-4 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
           <div className="grid grid-cols-3 gap-4 text-center">
@@ -162,7 +194,7 @@ export default function History() {
                 {messages.filter((m: any) => m.role === "user").length}
               </p>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {t("history.myMessages") || "رسائلي"}
+                {t("history.myMessages") || "رسالي"}
               </p>
             </div>
             <div>
@@ -170,7 +202,7 @@ export default function History() {
                 {messages.filter((m: any) => m.role === "assistant").length}
               </p>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {t("history.aiResponses") || "ردود Bodrix"}
+                {t("history.aiResponses") || "ردودBodrix"}
               </p>
             </div>
             <div>

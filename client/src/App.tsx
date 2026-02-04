@@ -20,6 +20,9 @@ import Ads from "./pages/Ads";
 import AdminDashboard from "./pages/AdminDashboard";
 import Reports from "./pages/Reports";
 import Notifications from "./pages/Notifications";
+import Search from "./pages/Search";
+import Reviews from "./pages/Reviews";
+import Backups from "./pages/Backups";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -63,6 +66,9 @@ function Router() {
       <Route path="/admin" component={() => <ProtectedRoute component={AdminDashboard} />} />
       <Route path="/reports" component={() => <ProtectedRoute component={Reports} />} />
       <Route path="/notifications" component={() => <ProtectedRoute component={Notifications} />} />
+      <Route path="/search" component={() => <ProtectedRoute component={Search} />} />
+      <Route path="/reviews" component={() => <ProtectedRoute component={Reviews} />} />
+      <Route path="/backups" component={() => <ProtectedRoute component={Backups} />} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
