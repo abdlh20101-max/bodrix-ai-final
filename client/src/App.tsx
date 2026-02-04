@@ -30,6 +30,9 @@ import Export from "./pages/Export";
 import RealTimeNotifications from "./pages/RealTimeNotifications";
 import Translation from "./pages/Translation";
 import Analytics from "./pages/Analytics";
+import Collaboration from "./pages/Collaboration";
+import Automation from "./pages/Automation";
+import Integrations from "./pages/Integrations";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -83,6 +86,9 @@ function Router() {
       <Route path="/real-time-notifications" component={() => <ProtectedRoute component={RealTimeNotifications} />} />
       <Route path="/translation" component={() => <ProtectedRoute component={Translation} />} />
       <Route path="/analytics" component={() => <ProtectedRoute component={Analytics} />} />
+      <Route path="/collaboration" component={() => <ProtectedRoute component={Collaboration} />} />
+      <Route path="/automation" component={() => <ProtectedRoute component={Automation} />} />
+      <Route path="/integrations" component={() => <ProtectedRoute component={Integrations} />} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
