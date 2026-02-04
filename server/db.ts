@@ -23,6 +23,10 @@ import {
   InsertWallet,
   InsertWalletTransaction,
   InsertBankSetting,
+  dailyChallenges,
+  userChallengeProgress,
+  InsertDailyChallenge,
+  InsertUserChallengeProgress,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
@@ -517,4 +521,106 @@ export async function getUserShares(userId: number) {
     .from(shares)
     .where(eq(shares.userId, userId))
     .orderBy(desc(shares.shareDate));
+}
+
+// ============ DAILY CHALLENGES FUNCTIONS ============
+
+export async function getDailyChallenges() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  return await db
+    .select()
+    .from(dailyChallenges)
+    .where(
+      and(
+        eq(dailyChallenges.isActive, 1),
+        gte(dailyChallenges.date, today)
+      )
+    );
+}
+
+export async function getUserChallengeProgress(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  return await db
+    .select()
+    .from(userChallengeProgress)
+    .where(
+      and(
+        eq(userChallengeProgress.userId, userId),
+        gte(userChallengeProgress.date, today)
+      )
+    );
+}
+
+export async function updateChallengeProgress(userId: number, challengeId: number, increment: number = 1) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const existing = await db
+    .select()
+    .from(userChallengeProgress)
+    .where(
+      and(
+        eq(userChallengeProgress.userId, userId),
+        eq(userChallengeProgress.challengeId, challengeId),
+        gte(userChallengeProgress.date, today)
+      )
+    )
+    .limit(1);
+
+  if (existing.length > 0) {
+    const progress = existing[0];
+    const challenge = await db
+      .select()
+      .from(dailyChallenges)
+      .where(eq(dailyChallenges.id, challengeId))
+      .limit(1);
+
+    if (challenge.length === 0) throw new Error("Challenge not found");
+
+    const newCount = progress.currentCount + increment;
+    const isCompleted = newCount >= challenge[0].targetCount ? 1 : 0;
+
+    await db
+      .update(userChallengeProgress)
+      .set({
+        currentCount: newCount,
+        isCompleted,
+        completedAt: isCompleted ? new Date() : null,
+      })
+      .where(eq(userChallengeProgress.id, progress.id));
+
+    // Award points if completed
+    if (isCompleted && !progress.isCompleted) {
+      await addPoints({
+        userId,
+        amount: challenge[0].rewardPoints,
+        reason: "challenge_completed",
+      });
+    }
+
+    return { ...progress, currentCount: newCount, isCompleted };
+  } else {
+    // Create new progress
+    await db.insert(userChallengeProgress).values({
+      userId,
+      challengeId,
+      currentCount: increment,
+      date: new Date(),
+    });
+
+    return { userId, challengeId, currentCount: increment, isCompleted: 0 };
+  }
 }

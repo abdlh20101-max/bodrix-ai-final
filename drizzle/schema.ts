@@ -169,3 +169,35 @@ export const bankSettings = mysqlTable("bankSettings", {
 
 export type BankSetting = typeof bankSettings.$inferSelect;
 export type InsertBankSetting = typeof bankSettings.$inferInsert;
+
+// Daily Challenges Table - جدول التحديات اليومية
+export const dailyChallenges = mysqlTable("dailyChallenges", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 100 }).notNull(),
+  description: text("description").notNull(),
+  type: mysqlEnum("type", ["watch_ads", "send_messages", "share", "referral"]).notNull(),
+  targetCount: int("targetCount").notNull(),
+  rewardPoints: int("rewardPoints").notNull(),
+  rewardBonus: int("rewardBonus").default(0).notNull(),
+  date: timestamp("date").defaultNow().notNull(),
+  isActive: int("isActive").default(1).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DailyChallenge = typeof dailyChallenges.$inferSelect;
+export type InsertDailyChallenge = typeof dailyChallenges.$inferInsert;
+
+// User Challenge Progress Table - جدول تقدم المستخدم في التحديات
+export const userChallengeProgress = mysqlTable("userChallengeProgress", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  challengeId: int("challengeId").notNull(),
+  currentCount: int("currentCount").default(0).notNull(),
+  isCompleted: int("isCompleted").default(0).notNull(),
+  completedAt: timestamp("completedAt"),
+  date: timestamp("date").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type UserChallengeProgress = typeof userChallengeProgress.$inferSelect;
+export type InsertUserChallengeProgress = typeof userChallengeProgress.$inferInsert;

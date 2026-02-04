@@ -143,3 +143,58 @@ export const subscriptionsRouter = router({
       };
     }),
 });
+
+// Auto-upgrade to Premium after $100 spent
+export async function checkAndUpgradeToPremium(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const user = await getUserById(userId);
+  if (!user || user.accountType !== "free") return null;
+
+  // Calculate total spent
+  const transactions = await db
+    .select()
+    .from(walletTransactions)
+    .where(
+      and(
+        eq(walletTransactions.userId, userId),
+        eq(walletTransactions.type, "purchase")
+      )
+    );
+
+  const totalSpent = transactions.reduce((sum, t) => sum + t.amount, 0);
+
+  // Auto-upgrade if spent >= $100
+  if (totalSpent >= 100) {
+    const endDate = new Date();
+    endDate.setFullYear(endDate.getFullYear() + 1);
+
+    await db.insert(subscriptions).values({
+      userId,
+      planType: "premium_year",
+      price: 0,
+      currency: "USD",
+      startDate: new Date(),
+      endDate,
+      status: "active",
+      paymentMethod: "auto_upgrade",
+    });
+
+    await db
+      .update(users)
+      .set({
+        accountType: "premium",
+        dailyMessagesLimit: 999999,
+        dailyImagesLimit: 999999,
+      })
+      .where(eq(users.id, userId));
+
+    return {
+      success: true,
+      message: "تم ترقيتك للـ Premium تلقائياً!",
+    };
+  }
+
+  return null;
+}
