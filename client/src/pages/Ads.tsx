@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/_core/hooks/useLanguage";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,6 +10,12 @@ export default function Ads() {
   const [, navigate] = useLocation();
   const [isWatchingAd, setIsWatchingAd] = useState(false);
   const [adCount, setAdCount] = useState(0);
+
+  useEffect(() => {
+    if ((window as any).Monetag) {
+      (window as any).Monetag.showAds();
+    }
+  }, []);
 
   const adsStats = {
     totalAdsWatched: 45,
