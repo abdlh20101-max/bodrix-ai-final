@@ -24,6 +24,9 @@ import Search from "./pages/Search";
 import Reviews from "./pages/Reviews";
 import Backups from "./pages/Backups";
 import EmailNotifications from "./pages/EmailNotifications";
+import Support from "./pages/Support";
+import Tags from "./pages/Tags";
+import Export from "./pages/Export";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -71,6 +74,9 @@ function Router() {
       <Route path="/reviews" component={() => <ProtectedRoute component={Reviews} />} />
       <Route path="/backups" component={() => <ProtectedRoute component={Backups} />} />
       <Route path="/email-notifications" component={() => <ProtectedRoute component={EmailNotifications} />} />
+      <Route path="/support" component={() => <ProtectedRoute component={Support} />} />
+      <Route path="/tags" component={() => <ProtectedRoute component={Tags} />} />
+      <Route path="/export" component={() => <ProtectedRoute component={Export} />} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
