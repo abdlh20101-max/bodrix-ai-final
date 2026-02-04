@@ -58,4 +58,19 @@ export const messagesRouter = router({
       remaining: limit.remaining,
     };
   }),
+
+  // Get message history
+  getHistory: protectedProcedure
+    .input(z.object({ limit: z.number().default(100) }))
+    .query(async ({ ctx, input }) => {
+      const messages = await getUserMessages(ctx.user.id, input.limit);
+      return messages;
+    }),
+
+  // Delete a message
+  delete: protectedProcedure
+    .input(z.object({ messageId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return { success: true };
+    }),
 });

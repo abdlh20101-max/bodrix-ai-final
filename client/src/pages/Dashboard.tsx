@@ -1,10 +1,11 @@
+import React from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLanguage } from "@/_core/hooks/useLanguage";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdBanner } from "@/components/AdBanner";
-import { LogOut, MessageSquare, Zap, Image, TrendingUp } from "lucide-react";
+import { LogOut, MessageSquare, Zap, Image, TrendingUp, History as HistoryIcon } from "lucide-react";
 import { useLocation } from "wouter";
 import bodrixLogo from "@/assets/bodrix-logo-transparent.png";
 
@@ -12,6 +13,15 @@ export default function Dashboard() {
   const { user, logout, loading } = useAuth();
   const { t } = useLanguage();
   const [, navigate] = useLocation();
+  const trpcUtils = trpc.useUtils();
+  
+  // تحديث البيانات عند دخول الصفحة
+  React.useEffect(() => {
+    trpcUtils.messages.getRemainingToday.invalidate();
+    trpcUtils.images.getRemainingToday.invalidate();
+    trpcUtils.points.getBalance.invalidate();
+  }, []);
+  
   const profileQuery = trpc.user.profile.useQuery();
   const pointsQuery = trpc.points.getBalance.useQuery();
   const messagesQuery = trpc.messages.getRemainingToday.useQuery();
@@ -64,6 +74,13 @@ export default function Dashboard() {
               title="الأسئلة الشائعة"
             >
               ❓
+            </button>
+            <button
+              onClick={() => navigate("/history")}
+              className="p-2 hover:bg-muted rounded-lg transition"
+              title="سجل المحادثات"
+            >
+              <HistoryIcon className="w-5 h-5" />
             </button>
             <div className="text-right">
               <p className="text-sm font-medium text-foreground">{user?.name}</p>

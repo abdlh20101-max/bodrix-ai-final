@@ -12,6 +12,8 @@ import Plans from "./pages/Plans";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import FAQ from "./pages/FAQ";
+import History from "./pages/History";
+import Checkout from "./pages/Checkout";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -47,6 +49,8 @@ function Router() {
       <Route path="/profile" component={() => <ProtectedRoute component={Profile} />} />
       <Route path="/settings" component={() => <ProtectedRoute component={Settings} />} />
       <Route path="/faq" component={() => <ProtectedRoute component={FAQ} />} />
+      <Route path="/history" component={() => <ProtectedRoute component={History} />} />
+      <Route path="/checkout" component={() => <ProtectedRoute component={Checkout} />} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

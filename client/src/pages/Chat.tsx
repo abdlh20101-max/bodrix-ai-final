@@ -20,8 +20,13 @@ export default function Chat() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const sendMessageMutation = trpc.messages.send.useMutation();
-  const getMessageLimitQuery = trpc.messages.getRemainingToday.useQuery();
+  const trpcUtils = trpc.useUtils();
+  const sendMessageMutation = trpc.messages.send.useMutation({
+    onSuccess: () => {
+      // تحديث البيانات بعد الإرسال
+      trpcUtils.messages.getRemainingToday.invalidate();
+    },
+  });
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -67,8 +72,6 @@ export default function Chat() {
     }
   };
 
-  const remainingMessages = getMessageLimitQuery.data?.remaining || 0;
-
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800">
       {/* Header */}
@@ -81,12 +84,7 @@ export default function Chat() {
             </h1>
           </div>
           <div className="flex items-center gap-4">
-            <div className="text-sm text-gray-600 dark:text-gray-400">
-              <span className="font-semibold text-blue-600">
-                {remainingMessages}
-              </span>{" "}
-              {t("chat.messagesLeft")}
-            </div>
+            {/* عدد الرسائل تم إزالته */}
           </div>
         </div>
       </div>
@@ -175,22 +173,18 @@ export default function Chat() {
                   handleSendMessage();
                 }
               }}
-              disabled={isLoading || remainingMessages === 0}
+              disabled={isLoading}
               className="rounded-full px-4"
             />
             <Button
               onClick={handleSendMessage}
-              disabled={isLoading || !input.trim() || remainingMessages === 0}
+              disabled={isLoading || !input.trim()}
               className="rounded-full bg-blue-600 hover:bg-blue-700 text-white"
             >
               <Send className="h-5 w-5" />
             </Button>
           </div>
-          {remainingMessages === 0 && (
-            <div className="mt-2 text-sm text-red-600 dark:text-red-400">
-              {t("chat.limitReached")}
-            </div>
-          )}
+
         </div>
       </div>
     </div>

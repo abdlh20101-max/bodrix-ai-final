@@ -3,9 +3,11 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Check } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function Plans() {
   const { t, language } = useLanguage();
+  const [, navigate] = useLocation();
   const plansQuery = trpc.subscriptions.getPlans.useQuery();
   const currentSubscriptionQuery = trpc.subscriptions.getCurrent.useQuery();
 
@@ -97,6 +99,11 @@ export default function Plans() {
         </div>
 
         <Button
+          onClick={() => {
+            if (!isCurrentPlan) {
+              navigate(`/checkout?planId=${plan.id}&planName=${plan.name}&price=${plan.price}`);
+            }
+          }}
           className={`w-full ${
             isCurrentPlan
               ? "bg-gray-400 cursor-not-allowed"
