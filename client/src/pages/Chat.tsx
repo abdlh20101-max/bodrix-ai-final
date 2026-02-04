@@ -21,9 +21,11 @@ export default function Chat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const trpcUtils = trpc.useUtils();
-  const sendMessageMutation = trpc.messages.send.useMutation({
+  
+  // Mutation for AI chat
+  const aiChatMutation = trpc.ai.chat.useMutation({
     onSuccess: () => {
-      // تحديث البيانات بعد الإرسال
+      // Invalidate cache after successful chat
       trpcUtils.messages.getRemainingToday.invalidate();
     },
   });
@@ -51,15 +53,20 @@ export default function Chat() {
     setIsLoading(true);
 
     try {
-      const result = await sendMessageMutation.mutateAsync({
+      // Call AI chat with conversation history
+      const result = await aiChatMutation.mutateAsync({
         content: input,
-        language,
+        language: language as "ar" | "en",
+        conversationHistory: messages.map((msg) => ({
+          role: msg.role,
+          content: msg.content,
+        })),
       });
 
-      // Simulate AI response
+      // Add AI response to messages
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: "شكراً على رسالتك! هذا رد تجريبي من Bodrix AI.",
+        content: result.response,
         role: "assistant",
         timestamp: new Date(),
       };
@@ -67,6 +74,18 @@ export default function Chat() {
       setMessages((prev) => [...prev, aiMessage]);
     } catch (error) {
       console.error("Error sending message:", error);
+      
+      // Show error message
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: language === "ar" 
+          ? "عذراً، حدث خطأ في الرد. حاول مرة أخرى."
+          : "Sorry, an error occurred. Please try again.",
+        role: "assistant",
+        timestamp: new Date(),
+      };
+      
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
