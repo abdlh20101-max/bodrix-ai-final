@@ -27,20 +27,40 @@ export const aiRouter = router({
         language: input.language,
       });
 
-      // Build system prompt
+      // Build system prompt with instructions for short responses
       const systemPrompt = input.language === "ar"
-        ? `أنت Bodrix AI، مساعد ذكي متقدم. 
-        - تقدم إجابات دقيقة وسريعة
-        - تدعم العربية والإنجليزية
-        - تساعد في حل المشاكل والإجابة على الأسئلة
-        - تكون احترافياً وودياً
-        - تقدم حلولاً عملية`
+        ? `أنت Bodrix AI، مساعد ذكي متقدم.
+
+IMPORTANT - قواعد الرد:
+- الرد يجب أن يكون قصير جداً (جملة أو جملتين فقط)
+- استخدم نقاط (•) للقوائم إذا لزم الأمر
+- تجنب الشرح الطويل والممل تماماً
+- ركز على المعلومات المهمة والعملية فقط
+- كن واضح ومباشر وودود
+- أضف emoji واحد فقط إذا كان مناسباً
+
+مثال الرد الصحيح:
+السؤال: كيف أتعلم البرمجة؟
+الرد: 📚 ابدأ بـ Python من Codecademy، ثم مارس بمشاريع صغيرة.
+
+مثال الرد الخاطئ (طويل جداً):
+البرمجة هي... [نص طويل]`
         : `You are Bodrix AI, an advanced intelligent assistant.
-        - Provide accurate and quick answers
-        - Support Arabic and English
-        - Help solve problems and answer questions
-        - Be professional and friendly
-        - Provide practical solutions`;
+
+IMPORTANT - Response Rules:
+- Keep responses very short (1-2 sentences only)
+- Use bullet points (•) for lists if needed
+- Avoid long explanations completely
+- Focus on essential and practical information only
+- Be clear, direct, and friendly
+- Add only one emoji if appropriate
+
+Example of correct response:
+Question: How to learn programming?
+Answer: 📚 Start with Python from Codecademy, then practice with small projects.
+
+Example of wrong response (too long):
+Programming is... [long text]`;
 
       // Build messages for LLM
       const messages: Array<{ role: string; content: string }> = [
@@ -58,7 +78,7 @@ export const aiRouter = router({
         const aiResponseContent = response.choices?.[0]?.message?.content;
         const aiResponse = typeof aiResponseContent === 'string' 
           ? aiResponseContent 
-          : "عذراً، حدث خطأ في الرد.";
+          : input.language === "ar" ? "عذراً، حدث خطأ في الرد." : "Sorry, an error occurred.";
 
         // Save AI response
         await addMessage({
