@@ -4,7 +4,11 @@ import {
   addSubscription,
   getUserSubscription,
   getUserSubscriptionHistory,
+  getUserById,
+  getDb,
 } from "../db";
+import { subscriptions, users, walletTransactions } from "../../drizzle/schema";
+import { eq, and } from "drizzle-orm";
 
 // Subscription plans configuration
 export const SUBSCRIPTION_PLANS = {
@@ -163,7 +167,7 @@ export async function checkAndUpgradeToPremium(userId: number) {
       )
     );
 
-  const totalSpent = transactions.reduce((sum, t) => sum + t.amount, 0);
+  const totalSpent = transactions.reduce((sum, t) => sum + parseFloat(t.amount), 0);
 
   // Auto-upgrade if spent >= $100
   if (totalSpent >= 100) {
