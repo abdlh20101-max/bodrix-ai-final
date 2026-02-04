@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, BarChart3, CreditCard, Users, TrendingUp, AlertCircle } from "lucide-react";
+import { ArrowLeft, BarChart3, CreditCard, Users, TrendingUp, AlertCircle, FileText, Bell } from "lucide-react";
 import { useLocation } from "wouter";
 
 export default function AdminDashboard() {
@@ -103,12 +103,22 @@ export default function AdminDashboard() {
             { id: "payments", label: "المدفوعات", icon: CreditCard },
             { id: "subscriptions", label: "الاشتراكات", icon: TrendingUp },
             { id: "referrals", label: "الإحالات", icon: Users },
+            { id: "reports", label: "التقارير", icon: FileText },
+            { id: "notifications", label: "الإشعارات", icon: Bell },
           ].map((tab) => {
             const Icon = tab.icon;
             return (
               <Button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => {
+                  if (tab.id === "reports") {
+                    navigate("/reports");
+                  } else if (tab.id === "notifications") {
+                    navigate("/notifications");
+                  } else {
+                    setActiveTab(tab.id);
+                  }
+                }}
                 variant={activeTab === tab.id ? "default" : "outline"}
                 className="flex items-center gap-2 whitespace-nowrap"
               >
