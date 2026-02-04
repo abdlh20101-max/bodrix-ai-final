@@ -86,12 +86,19 @@ export default function Dashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+          <h2 className="text-3xl font-bold text-foreground mb-2">
             أهلاً بك، {user?.name?.split(" ")[0]}! 👋
           </h2>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             ابدأ محادثة جديدة مع Bodrix AI لتحصل على إجابات ذكية وسريعة
           </p>
+          <Button
+            onClick={() => navigate("/chat")}
+            className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg"
+          >
+            <MessageSquare className="mr-2 h-5 w-5" />
+            ابدأ محادثة جديدة
+          </Button>
         </div>
 
         {/* Stats Grid */}
@@ -99,7 +106,7 @@ export default function Dashboard() {
           <Card className="hover:shadow-lg transition-shadow">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-600">{t("chat.messagesLeft")}</span>
+                <span className="text-sm font-medium text-muted-foreground">{t("chat.messagesLeft")}</span>
                 <MessageSquare className="w-5 h-5 text-blue-600" />
               </CardTitle>
             </CardHeader>
