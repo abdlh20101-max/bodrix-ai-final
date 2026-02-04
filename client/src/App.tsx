@@ -23,6 +23,7 @@ import Notifications from "./pages/Notifications";
 import Search from "./pages/Search";
 import Reviews from "./pages/Reviews";
 import Backups from "./pages/Backups";
+import EmailNotifications from "./pages/EmailNotifications";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -69,6 +70,7 @@ function Router() {
       <Route path="/search" component={() => <ProtectedRoute component={Search} />} />
       <Route path="/reviews" component={() => <ProtectedRoute component={Reviews} />} />
       <Route path="/backups" component={() => <ProtectedRoute component={Backups} />} />
+      <Route path="/email-notifications" component={() => <ProtectedRoute component={EmailNotifications} />} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
