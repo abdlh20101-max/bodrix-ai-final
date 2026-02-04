@@ -12,6 +12,16 @@
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed:', err));
       }
+    </script>
+    <!-- Monetag Ad Network Script -->
+    <script type="text/javascript">
+      (function() {
+        var monetagScript = document.createElement('script');
+        monetagScript.type = 'text/javascript';
+        monetagScript.src = 'https://cdn.monetag.com/tags/10564183.js';
+        monetagScript.async = true;
+        document.head.appendChild(monetagScript);
+      })();
     </script>    
     <!-- THIS IS THE START OF A COMMENT BLOCK, BLOCK TO BE DELETED: Google Fonts here, example:
     <link rel="preconnect" href="https://fonts.googleapis.com" />

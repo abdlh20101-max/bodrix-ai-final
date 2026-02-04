@@ -5,6 +5,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdBanner } from "@/components/AdBanner";
+import { AdBannerTop } from "@/components/AdBannerTop";
 import { LogOut, MessageSquare, Zap, Image, TrendingUp, History as HistoryIcon, CreditCard, Settings, HelpCircle, User, Wallet as WalletIcon, Share2, Play, Shield } from "lucide-react";
 import { useLocation } from "wouter";
 import bodrixLogo from "@/assets/bodrix-logo-transparent.png";
@@ -50,6 +51,9 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Top Ad Banner */}
+      <AdBannerTop />
+
       {/* Header */}
       <header className="bg-card shadow-sm border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">

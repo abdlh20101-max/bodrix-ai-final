@@ -4,6 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { AdBannerTop } from "@/components/AdBannerTop";
 import { Loader2, Send, Upload, Link as LinkIcon } from "lucide-react";
 
 interface Message {
@@ -93,6 +94,9 @@ export default function Chat() {
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800">
+      {/* Top Ad Banner */}
+      <AdBannerTop />
+
       {/* Header */}
       <div className="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 px-4 py-3 shadow-sm">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
