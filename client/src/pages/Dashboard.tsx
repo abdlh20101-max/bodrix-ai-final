@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdBanner } from "@/components/AdBanner";
 import { AdBannerTop } from "@/components/AdBannerTop";
+import { AdsterraAd } from "@/components/Adsterra";
 import { LogOut, MessageSquare, Zap, Image, TrendingUp, History as HistoryIcon, CreditCard, Settings, HelpCircle, User, Wallet as WalletIcon, Share2, Play, Shield } from "lucide-react";
 import { useLocation } from "wouter";
 import bodrixLogo from "@/assets/bodrix-logo-transparent.png";
@@ -291,10 +292,8 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Ad Banner - Moved to bottom */}
-        <div className="my-8">
-          <AdBanner type="horizontal" />
-        </div>
+        {/* Adsterra Ad Banner */}
+        <AdsterraAd />
       </main>
     </div>
   );

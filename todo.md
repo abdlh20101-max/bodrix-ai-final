@@ -192,3 +192,10 @@
 - [x] إضافة نظام الترقية التلقائي للـ Premium
 - [x] اختبار جميع الميزات الجديدة
 - [x] حفظ checkpoint نهائي
+
+
+## مهام جديدة - Adsterra Integration:
+- [x] إضافة Adsterra Ad Code في Dashboard
+- [x] إضافة Adsterra Ad Code في Chat
+- [x] اختبار الإعلانات (62 ناجح)
+- [ ] حفظ checkpoint نهائي

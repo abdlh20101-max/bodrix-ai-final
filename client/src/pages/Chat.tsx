@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { AdBannerTop } from "@/components/AdBannerTop";
+import { AdsterraAd } from "@/components/Adsterra";
 import { Loader2, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -141,6 +142,7 @@ export default function Chat() {
         )}
         <div ref={messagesEndRef} />
       </div>
+      <AdsterraAd />
       <div className="border-t border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-slate-800">
         <div className="flex gap-2">
           <Input
