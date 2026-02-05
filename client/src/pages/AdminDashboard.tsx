@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { Brain, Megaphone, Sparkles, Zap, BarChart3, CreditCard, Users, TrendingUp, AlertCircle, FileText, Bell, ArrowLeft, Settings } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, BarChart3, CreditCard, Users, TrendingUp, AlertCircle, FileText, Bell } from "lucide-react";
 import { useLocation } from "wouter";
+import { AIControlCenter } from "@/components/AIControlCenter";
+import { MarketingAutomation } from "@/components/MarketingAutomation";
+import { SmartSuggestions } from "@/components/SmartSuggestions";
+import { AdvancedAnalytics } from "@/components/AdvancedAnalytics";
 
 export default function AdminDashboard() {
   const { user } = useAuth();
@@ -100,11 +104,16 @@ export default function AdminDashboard() {
         <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
           {[
             { id: "overview", label: "نظرة عامة", icon: BarChart3 },
+            { id: "ai-control", label: "التحكم بـ AI", icon: Brain },
+            { id: "marketing", label: "التسويق الآلي", icon: Megaphone },
+            { id: "suggestions", label: "الاقتراحات الذكية", icon: Sparkles },
             { id: "payments", label: "المدفوعات", icon: CreditCard },
+            { id: "analytics", label: "الإحصائيات", icon: BarChart3 },
             { id: "subscriptions", label: "الاشتراكات", icon: TrendingUp },
             { id: "referrals", label: "الإحالات", icon: Users },
             { id: "reports", label: "التقارير", icon: FileText },
             { id: "notifications", label: "الإشعارات", icon: Bell },
+            { id: "security", label: "الأمان", icon: Settings },
           ].map((tab) => {
             const Icon = tab.icon;
             return (
@@ -320,6 +329,35 @@ export default function AdminDashboard() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {/* AI Control Tab */}
+        {activeTab === "ai-control" && <AIControlCenter />}
+
+        {/* Marketing Automation Tab */}
+        {activeTab === "marketing" && <MarketingAutomation />}
+
+        {/* Smart Suggestions Tab */}
+        {activeTab === "suggestions" && <SmartSuggestions />}
+
+        {/* Analytics Tab */}
+        {activeTab === "analytics" && <AdvancedAnalytics />}
+
+        {/* Security Tab */}
+        {activeTab === "security" && (
+          <div className="space-y-6">
+            <Card className="p-6 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">التحكم الأمني</h3>
+              <div className="space-y-4">
+                <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                  <p className="font-semibold text-green-900 dark:text-green-400">✓ حالة الأمان: آمن</p>
+                </div>
+                <Button className="w-full bg-red-600 hover:bg-red-700 text-white">
+                  إعادة تعيين كلمات المرور
+                </Button>
               </div>
             </Card>
           </div>
