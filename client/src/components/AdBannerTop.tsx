@@ -28,12 +28,12 @@ export function AdBannerTop() {
   }, []);
 
   return (
-    <div className="w-full bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-700 border-b border-gray-200 dark:border-slate-600 py-2 px-4">
+    <div className="w-full bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-700 border-b border-gray-200 dark:border-slate-600 py-1 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Monetag Ad Container */}
         <div
           id="monetag-ad-top"
-          className="flex justify-center items-center min-h-[60px] bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-600"
+          className="flex justify-center items-center min-h-[40px] bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-600"
         >
           {!isLoaded && (
             <p className="text-xs text-gray-500 dark:text-gray-400">
