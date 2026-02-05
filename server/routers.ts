@@ -9,6 +9,7 @@ import { pointsRouter } from "./routers/points";
 import { subscriptionsRouter } from "./routers/subscriptions";
 import { aiRouter } from "./routers/ai";
 import { challengesRouter } from "./routers/challenges";
+import { aiChatRouter } from "./routers/aiChat";
 
 export const appRouter = router({
   system: systemRouter,
@@ -31,6 +32,7 @@ export const appRouter = router({
   subscriptions: subscriptionsRouter,
   ai: aiRouter,
   challenges: challengesRouter,
+  aiChat: aiChatRouter,
 });
 
 export type AppRouter = typeof appRouter;

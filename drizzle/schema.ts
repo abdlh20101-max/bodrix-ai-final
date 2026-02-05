@@ -201,3 +201,103 @@ export const userChallengeProgress = mysqlTable("userChallengeProgress", {
 
 export type UserChallengeProgress = typeof userChallengeProgress.$inferSelect;
 export type InsertUserChallengeProgress = typeof userChallengeProgress.$inferInsert;
+
+
+// AI Chat History Table - جدول سجل دردشة الـ AI
+export const aiChatHistory = mysqlTable("aiChatHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  chatType: mysqlEnum("chatType", ["admin", "private"]).default("admin").notNull(),
+  aiProvider: varchar("aiProvider", { length: 50 }).default("openai").notNull(),
+  aiModel: varchar("aiModel", { length: 50 }).default("gpt-4").notNull(),
+  userMessage: text("userMessage").notNull(),
+  aiResponse: text("aiResponse").notNull(),
+  tokens: int("tokens").default(0).notNull(),
+  isEncrypted: int("isEncrypted").default(0).notNull(),
+  encryptionKey: varchar("encryptionKey", { length: 255 }),
+  status: mysqlEnum("status", ["sent", "received", "processing", "failed"]).default("received").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AIChatHistory = typeof aiChatHistory.$inferSelect;
+export type InsertAIChatHistory = typeof aiChatHistory.$inferInsert;
+
+// AI Tasks Table - جدول مهام الـ AI
+export const aiTasks = mysqlTable("aiTasks", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  command: text("command").notNull(),
+  status: mysqlEnum("status", ["pending", "processing", "completed", "failed", "cancelled"]).default("pending").notNull(),
+  result: text("result"),
+  errorMessage: text("errorMessage"),
+  priority: mysqlEnum("priority", ["low", "medium", "high", "urgent"]).default("medium").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  startedAt: timestamp("startedAt"),
+  completedAt: timestamp("completedAt"),
+});
+
+export type AITask = typeof aiTasks.$inferSelect;
+export type InsertAITask = typeof aiTasks.$inferInsert;
+
+// Webhook Events Table - جدول أحداث الـ Webhook
+export const webhookEvents = mysqlTable("webhookEvents", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  eventType: varchar("eventType", { length: 100 }).notNull(),
+  trigger: text("trigger").notNull(),
+  action: text("action").notNull(),
+  isActive: int("isActive").default(1).notNull(),
+  executionCount: int("executionCount").default(0).notNull(),
+  lastExecuted: timestamp("lastExecuted"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type WebhookEvent = typeof webhookEvents.$inferSelect;
+export type InsertWebhookEvent = typeof webhookEvents.$inferInsert;
+
+// User Permissions Table - جدول أذونات المستخدمين
+export const userPermissions = mysqlTable("userPermissions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  permission: varchar("permission", { length: 100 }).notNull(),
+  isGranted: int("isGranted").default(1).notNull(),
+  grantedBy: int("grantedBy"),
+  grantedAt: timestamp("grantedAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"),
+});
+
+export type UserPermission = typeof userPermissions.$inferSelect;
+export type InsertUserPermission = typeof userPermissions.$inferInsert;
+
+// Rate Limit Table - جدول حدود المعدل
+export const rateLimits = mysqlTable("rateLimits", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  resource: varchar("resource", { length: 100 }).notNull(),
+  requestCount: int("requestCount").default(0).notNull(),
+  limitPerHour: int("limitPerHour").default(100).notNull(),
+  resetAt: timestamp("resetAt").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type RateLimit = typeof rateLimits.$inferSelect;
+export type InsertRateLimit = typeof rateLimits.$inferInsert;
+
+// Notifications Table - جدول الإشعارات
+export const notifications = mysqlTable("notifications", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  message: text("message").notNull(),
+  type: mysqlEnum("type", ["info", "success", "warning", "error", "task_completed"]).default("info").notNull(),
+  isRead: int("isRead").default(0).notNull(),
+  actionUrl: varchar("actionUrl", { length: 512 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  readAt: timestamp("readAt"),
+});
+
+export type Notification = typeof notifications.$inferSelect;
+export type InsertNotification = typeof notifications.$inferInsert;
