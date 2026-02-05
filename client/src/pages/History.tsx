@@ -179,13 +179,13 @@ export default function History() {
             <span className="text-sm font-semibold">التقييمات</span>
           </Button>
 
-          {/* Backups Button */}
+          {/* Back Button */}
           <Button
-            onClick={() => navigate("/backups")}
+            onClick={() => navigate("/dashboard")}
             className="h-24 bg-gradient-to-br from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white flex flex-col items-center justify-center gap-2 rounded-lg"
           >
             <HardDrive className="w-8 h-8" />
-            <span className="text-sm font-semibold">النسخ الاحتياطية</span>
+            <span className="text-sm font-semibold">العودة للخلف</span>
           </Button>
         </div>
 
