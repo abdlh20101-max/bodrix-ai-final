@@ -18,7 +18,7 @@ export function AdManager() {
       optionsScript.type = 'text/javascript';
       optionsScript.innerHTML = `
         var atOptions = {
-          'key': 'e6bc5ef409e84c68b61266975c307ef3',
+          'key': '28546234',
           'format': 'iframe',
           'height': 90,
           'width': 728,
@@ -30,7 +30,7 @@ export function AdManager() {
       // Load Adsterra invoke script
       const adScript = document.createElement('script');
       adScript.type = 'text/javascript';
-      adScript.src = 'https://www.highperformanceformat.com/e6bc5ef409e84c68b61266975c307ef3/invoke.js';
+      adScript.src = 'https://www.highperformanceformat.com/28546234/invoke.js';
       adScript.async = true;
       adScript.onload = () => {
         setAdLoaded(true);
