@@ -8,6 +8,7 @@ import { AIControlCenter } from "@/components/AIControlCenter";
 import { MarketingAutomation } from "@/components/MarketingAutomation";
 import { SmartSuggestions } from "@/components/SmartSuggestions";
 import { AdvancedAnalytics } from "@/components/AdvancedAnalytics";
+import { FeatureManager } from "@/components/FeatureManager";
 
 export default function AdminDashboard() {
   const { user } = useAuth();
@@ -114,6 +115,7 @@ export default function AdminDashboard() {
             { id: "reports", label: "التقارير", icon: FileText },
             { id: "notifications", label: "الإشعارات", icon: Bell },
             { id: "security", label: "الأمان", icon: Settings },
+            { id: "features", label: "إدارة الميزات", icon: Zap },
           ].map((tab) => {
             const Icon = tab.icon;
             return (
@@ -333,6 +335,9 @@ export default function AdminDashboard() {
             </Card>
           </div>
         )}
+
+        {/* Features Tab */}
+        {activeTab === "features" && <FeatureManager />}
 
         {/* AI Control Tab */}
         {activeTab === "ai-control" && <AIControlCenter />}
