@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Brain, Megaphone, Sparkles, Zap, BarChart3, CreditCard, Users, TrendingUp, AlertCircle, FileText, Bell, ArrowLeft, Settings } from "lucide-react";
+import { Brain, Megaphone, Sparkles, Zap, BarChart3, CreditCard, Users, TrendingUp, AlertCircle, FileText, Bell, ArrowLeft, Settings, MessageCircle, Lock } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -9,6 +9,8 @@ import { MarketingAutomation } from "@/components/MarketingAutomation";
 import { SmartSuggestions } from "@/components/SmartSuggestions";
 import { AdvancedAnalytics } from "@/components/AdvancedAnalytics";
 import { FeatureManager } from "@/components/FeatureManager";
+import { PrivateChat } from "@/components/PrivateChat";
+import { AdminChat } from "@/components/AdminChat";
 
 export default function AdminDashboard() {
   const { user } = useAuth();
@@ -116,6 +118,8 @@ export default function AdminDashboard() {
             { id: "notifications", label: "الإشعارات", icon: Bell },
             { id: "security", label: "الأمان", icon: Settings },
             { id: "features", label: "إدارة الميزات", icon: Zap },
+            { id: "admin-chat", label: "دردشة الإدمن", icon: MessageCircle },
+            { id: "private-chat", label: "دردشة خصوصية", icon: Lock },
           ].map((tab) => {
             const Icon = tab.icon;
             return (
@@ -347,6 +351,20 @@ export default function AdminDashboard() {
 
         {/* Smart Suggestions Tab */}
         {activeTab === "suggestions" && <SmartSuggestions />}
+
+        {/* Admin Chat Tab */}
+        {activeTab === "admin-chat" && (
+          <div className="h-96">
+            <AdminChat />
+          </div>
+        )}
+
+        {/* Private Chat Tab */}
+        {activeTab === "private-chat" && (
+          <div className="h-96">
+            <PrivateChat />
+          </div>
+        )}
 
         {/* Analytics Tab */}
         {activeTab === "analytics" && <AdvancedAnalytics />}
