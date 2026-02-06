@@ -43,6 +43,8 @@ import Rewards from "./pages/Rewards";
 import AdvancedNotifications from "./pages/AdvancedNotifications";
 import InAppPurchase from "./pages/InAppPurchase";
 import AdvancedReferrals from "./pages/AdvancedReferrals";
+import { PaymentHistory } from "./pages/PaymentHistory";
+import Billing from "./pages/Billing";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -109,6 +111,9 @@ function Router() {
       <Route path="/advanced-notifications" component={() => <ProtectedRoute component={AdvancedNotifications} />} />
       <Route path="/in-app-purchase" component={() => <ProtectedRoute component={InAppPurchase} />} />
       <Route path="/advanced-referrals" component={() => <ProtectedRoute component={AdvancedReferrals} />} />
+      <Route path="/payment-history" component={() => <ProtectedRoute component={PaymentHistory} />} />
+      <Route path="/billing" component={() => <ProtectedRoute component={Billing} />} />
+      <Route path="/billing/success" component={() => <ProtectedRoute component={Billing} />} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
