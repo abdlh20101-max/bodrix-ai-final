@@ -5,9 +5,7 @@ import Stripe from "stripe";
  * نظام الدفع والاشتراكات
  */
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2023-10-16",
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
 export interface SubscriptionPlan {
   id: string;
@@ -158,7 +156,7 @@ class StripeManager {
     immediate = false
   ): Promise<Stripe.Subscription> {
     if (immediate) {
-      return stripe.subscriptions.del(stripeSubscriptionId);
+      return stripe.subscriptions.cancel(stripeSubscriptionId);
     }
 
     return stripe.subscriptions.update(stripeSubscriptionId, {
