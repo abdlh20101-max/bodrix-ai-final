@@ -80,8 +80,8 @@ export const PremiumBannerAd = ({
           <div className="flex items-center gap-2 flex-shrink-0">
             <button
               onClick={() => {
-                // Navigate to billing page
-                window.location.href = "/billing?promo=50off";
+                // Navigate to plans page
+                window.location.href = "/plans?promo=50off";
               }}
               className={`inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
                 variant === "light"

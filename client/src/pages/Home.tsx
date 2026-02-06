@@ -43,18 +43,18 @@ export default function Home() {
           <div className="flex items-center gap-4">
             {isAuthenticated ? (
               <>
+              <Button
+                onClick={() => navigate("/plans")}
+                variant="outline"
+                className="text-white border-slate-600 hover:bg-slate-800"
+              >
+                الخطط والباقات
+              </Button>
                 <Button
-                  onClick={() => navigate("/dashboard")}
-                  variant="outline"
-                  className="text-white border-slate-600 hover:bg-slate-800"
-                >
-                  لوحة التحكم
-                </Button>
-                <Button
-                  onClick={() => navigate("/billing")}
+                  onClick={() => navigate("/plans")}
                   className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                 >
-                  الخطط والباقات
+                  اعرض الخطط
                 </Button>
               </>
             ) : (
@@ -267,7 +267,7 @@ export default function Home() {
                 </ul>
 
                 <Button
-                  onClick={() => navigate("/billing")}
+                  onClick={() => navigate("/plans")}
                   className={`w-full ${
                     plan.highlighted
                       ? "bg-white text-blue-600 hover:bg-gray-100"
