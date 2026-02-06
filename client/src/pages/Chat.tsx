@@ -139,7 +139,7 @@ export default function Chat() {
 
       {/* Top Banner Ad */}
       <div className="px-4 py-2 bg-slate-800/50">
-        <AdsterraBannerAd placement="chat_top" className="rounded-lg" />
+        <AdsterraBannerAd placement="e6bc5ef409e84c68b61266975c307ef3" className="rounded-lg" />
       </div>
 
       {/* Messages Area */}

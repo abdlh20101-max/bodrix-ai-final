@@ -3,6 +3,7 @@ import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { PremiumBannerAd, FloatingBannerAd, InlineBannerAd } from "@/components/PremiumBannerAd";
+import { AdsterraBannerAd } from "@/components/AdsterraAds";
 import {
   Sparkles,
   Zap,
@@ -119,6 +120,11 @@ export default function Home() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Adsterra Banner Ad */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
+        <AdsterraBannerAd />
       </section>
 
       {/* Inline Banner Ad */}

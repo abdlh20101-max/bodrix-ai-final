@@ -101,7 +101,7 @@ export default function Dashboard() {
       {/* Top Banner Ad */}
       <div className="bg-slate-800/50 px-4 py-3">
         <div className="max-w-7xl mx-auto">
-          <AdsterraBannerAd placement="dashboard_top" className="rounded-lg" />
+          <AdsterraBannerAd placement="e6bc5ef409e84c68b61266975c307ef3" className="rounded-lg" />
         </div>
       </div>
 
@@ -281,7 +281,7 @@ export default function Dashboard() {
 
         {/* Bottom Banner Ad */}
         <div className="mb-8">
-          <AdsterraBannerAd placement="dashboard_bottom" className="rounded-lg" />
+          <AdsterraBannerAd placement="e6bc5ef409e84c68b61266975c307ef3" className="rounded-lg" />
         </div>
       </main>
       

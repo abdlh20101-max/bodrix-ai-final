@@ -13,10 +13,10 @@ interface AdsterraAdProps {
 
 /**
  * Banner Ad Component
- * إعلان بنر قياسي
+ * إعلان بنر قياسي (728x90)
  */
 export const AdsterraBannerAd = ({
-  placement = "banner_top",
+  placement = "e6bc5ef409e84c68b61266975c307ef3",
   className = "",
 }: {
   placement?: string;
@@ -25,33 +25,42 @@ export const AdsterraBannerAd = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Load Adsterra script
-    const script = document.createElement("script");
-    script.src = "//a.adsterra.com/s/js/160/uds.js";
-    script.async = true;
-    script.onload = () => {
-      // Push ad to container
-      if (window.AdsterraAds) {
-        window.AdsterraAds.renderAd(placement);
-      }
-    };
-    document.head.appendChild(script);
+    if (!containerRef.current) return;
 
-    return () => {
-      // Cleanup
-      if (document.head.contains(script)) {
-        document.head.removeChild(script);
-      }
-    };
+    // Clear container
+    containerRef.current.innerHTML = "";
+
+    // Create options script
+    const optionsScript = document.createElement("script");
+    optionsScript.type = "text/javascript";
+    optionsScript.innerHTML = `
+      atOptions = {
+        'key' : '${placement}',
+        'format' : 'iframe',
+        'height' : 90,
+        'width' : 728,
+        'params' : {}
+      };
+    `;
+    containerRef.current.appendChild(optionsScript);
+
+    // Create invoke script
+    const invokeScript = document.createElement("script");
+    invokeScript.type = "text/javascript";
+    invokeScript.src = `https://www.highperformanceformat.com/${placement}/invoke.js`;
+    invokeScript.async = true;
+    containerRef.current.appendChild(invokeScript);
+
   }, [placement]);
 
   return (
-    <div
-      ref={containerRef}
-      className={`adsterra-ad-container ${className}`}
-      data-placement={placement}
-    >
-      {/* Ad will be rendered here by Adsterra script */}
+    <div className={`flex justify-center my-4 ${className}`}>
+      <div
+        ref={containerRef}
+        className="adsterra-banner-container min-h-[90px] min-w-[728px] bg-slate-800/10 rounded flex items-center justify-center"
+      >
+        {/* Ad will be rendered here */}
+      </div>
     </div>
   );
 };
@@ -163,55 +172,53 @@ export const AdsterraInterstitialAd = ({
     };
   }, [placement]);
 
-  return null; // Interstitial ads don't need a visible container
+  return null;
 };
 
 /**
  * Generic Adsterra Ad Component
- * مكون عام لأي نوع إعلان
  */
 export const AdsterraAd = ({
   adType = "banner",
-  placement = "default",
+  placement = "e6bc5ef409e84c68b61266975c307ef3",
   className = "",
 }: AdsterraAdProps) => {
   switch (adType) {
     case "banner":
       return (
         <AdsterraBannerAd
-          placement={placement || "banner_top"}
+          placement={placement}
           className={className}
         />
       );
     case "native":
       return (
         <AdsterraNativeAd
-          placement={placement || "native_content"}
+          placement={placement}
           className={className}
         />
       );
     case "video":
       return (
         <AdsterraVideoAd
-          placement={placement || "video_content"}
+          placement={placement}
           className={className}
         />
       );
     case "interstitial":
       return (
-        <AdsterraInterstitialAd placement={placement || "interstitial"} />
+        <AdsterraInterstitialAd placement={placement} />
       );
     default:
       return (
         <AdsterraBannerAd
-          placement={placement || "banner_top"}
+          placement={placement}
           className={className}
         />
       );
   }
 };
 
-// Type augmentation for window object
 declare global {
   interface Window {
     AdsterraAds?: {

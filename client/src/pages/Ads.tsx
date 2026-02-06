@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft, Play, Clock, DollarSign, TrendingUp } from "lucide-react";
 import { useLocation } from "wouter";
+import { AdsterraBannerAd } from "@/components/AdsterraAds";
 
 export default function Ads() {
   const { t, language } = useLanguage();
@@ -206,6 +207,11 @@ export default function Ads() {
               </Button>
             </Card>
           ))}
+        </div>
+
+        {/* Adsterra Banner Ad */}
+        <div className="mt-8">
+          <AdsterraBannerAd placement="e6bc5ef409e84c68b61266975c307ef3" className="rounded-lg" />
         </div>
 
         {/* Info Section */}
