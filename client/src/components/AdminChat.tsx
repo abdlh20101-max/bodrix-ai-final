@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { MessageCircle, Send, Trash2, Copy, Settings } from 'lucide-react';
+import { trpc } from '@/lib/trpc';
 
 interface AdminMessage {
   id: string;
@@ -29,12 +30,35 @@ export function AdminChat() {
   const [isLoading, setIsLoading] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [aiMode, setAiMode] = useState<'normal' | 'autonomous' | 'creative'>('normal');
+  const [aiProvider, setAiProvider] = useState<'openai' | 'claude' | 'gemini'>('openai');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // tRPC mutations
+  const sendMessageMutation = trpc.aiChat.sendMessage.useMutation();
+  const getHistoryQuery = trpc.aiChat.getHistory.useQuery({
+    chatType: 'admin',
+    limit: 50,
+  });
 
   // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Load chat history
+  useEffect(() => {
+    if (getHistoryQuery.data?.messages) {
+      const loadedMessages = getHistoryQuery.data.messages.map((msg: any) => ({
+        id: `msg_${msg.id}`,
+        content: msg.userMessage,
+        sender: 'admin' as const,
+        timestamp: new Date(msg.createdAt),
+        status: 'received' as const,
+        type: 'message' as const,
+      }));
+      setMessages(loadedMessages);
+    }
+  }, [getHistoryQuery.data]);
 
   /**
    * Detect message type
@@ -68,36 +92,48 @@ export function AdminChat() {
     setIsLoading(true);
 
     try {
-      // Simulate AI response based on mode
-      setTimeout(() => {
-        let responseContent = '';
+      // Send to AI via tRPC
+      const response = await sendMessageMutation.mutateAsync({
+        message: input,
+        chatType: 'admin',
+        aiProvider,
+        aiModel: aiProvider === 'openai' ? 'gpt-4' : aiProvider === 'claude' ? 'claude-3-opus' : 'gemini-pro',
+      });
 
-        switch (aiMode) {
-          case 'autonomous':
-            responseContent = `🤖 Autonomous Mode: I've analyzed your request and started implementing changes automatically.`;
-            break;
-          case 'creative':
-            responseContent = `✨ Creative Mode: I have some innovative ideas for your project...`;
-            break;
-          default:
-            responseContent = `AI Response: Processing your request: "${input.substring(0, 40)}..."`;
-        }
-
+      if (response.success) {
         const aiMessage: AdminMessage = {
           id: `msg_${Date.now() + 1}`,
-          content: responseContent,
+          content: response.message,
           sender: 'ai',
           timestamp: new Date(),
           status: 'received',
           type: 'message',
         };
-
         setMessages(prev => [...prev, aiMessage]);
-        setIsLoading(false);
-      }, 1500);
+      }
     } catch (error) {
       console.error('Failed to send message:', error);
+      const errorMessage: AdminMessage = {
+        id: `msg_${Date.now() + 1}`,
+        content: `خطأ: ${error instanceof Error ? error.message : 'فشل الاتصال بـ AI'}`,
+        sender: 'ai',
+        timestamp: new Date(),
+        status: 'received',
+        type: 'message',
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
+    }
+  };
+
+  /**
+   * Clear chat
+   * مسح الدردشة
+   */
+  const handleClearChat = () => {
+    if (confirm(t('common.confirmDelete') || 'هل تريد مسح جميع الرسائل؟')) {
+      setMessages([]);
     }
   };
 
@@ -109,100 +145,97 @@ export function AdminChat() {
     navigator.clipboard.writeText(content);
   };
 
-  /**
-   * Clear chat
-   * مسح الدردشة
-   */
-  const handleClearChat = () => {
-    if (confirm(t('common.confirmDelete') || 'هل تريد مسح الدردشة؟')) {
-      setMessages([]);
-    }
-  };
-
   return (
     <div className="w-full h-full flex flex-col bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700">
-      {/* Header */}
-      <div className="p-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
-            <MessageCircle className="w-5 h-5 text-blue-600 dark:text-blue-300" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white">
-              {language === 'ar' ? 'دردشة الإدمن' : 'Admin Chat'}
-            </h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              {aiMode === 'autonomous' && '🤖 Autonomous'}
-              {aiMode === 'creative' && '✨ Creative'}
-              {aiMode === 'normal' && '💬 Normal'}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowSettings(!showSettings)}
-          >
-            <Settings className="w-4 h-4" />
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleClearChat}
-            disabled={messages.length === 0}
-          >
-            <Trash2 className="w-4 h-4 text-red-500" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Settings Panel */}
-      {showSettings && (
-        <div className="p-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700 space-y-3">
-          <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-              {language === 'ar' ? 'وضع الـ AI' : 'AI Mode'}
-            </label>
-            <div className="flex gap-2">
-              {(['normal', 'autonomous', 'creative'] as const).map(mode => (
-                <Button
-                  key={mode}
-                  variant={aiMode === mode ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setAiMode(mode)}
-                >
-                  {mode === 'normal' && '💬'}
-                  {mode === 'autonomous' && '🤖'}
-                  {mode === 'creative' && '✨'}
-                  {language === 'ar'
-                    ? mode === 'normal'
-                      ? 'عادي'
-                      : mode === 'autonomous'
-                      ? 'مستقل'
-                      : 'إبداعي'
-                    : mode.charAt(0).toUpperCase() + mode.slice(1)}
-                </Button>
-              ))}
+      {/* Header with Settings */}
+      <div className="p-4 border-b border-gray-200 dark:border-slate-700">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+              <MessageCircle className="w-5 h-5 text-blue-600 dark:text-blue-300" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white">
+                {language === 'ar' ? 'دردشة الإدمن' : 'Admin Chat'}
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {language === 'ar' ? `الوضع: ${aiMode === 'autonomous' ? '🤖 مستقل' : aiMode === 'creative' ? '✨ إبداعي' : '💬 عادي'}` : `Mode: ${aiMode}`}
+              </p>
             </div>
           </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowSettings(!showSettings)}
+              title={language === 'ar' ? 'الإعدادات' : 'Settings'}
+            >
+              <Settings className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClearChat}
+              className="text-red-600 hover:text-red-700"
+              title={language === 'ar' ? 'مسح الدردشة' : 'Clear chat'}
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
-      )}
+
+        {/* Settings Panel */}
+        {showSettings && (
+          <div className="p-3 bg-gray-50 dark:bg-slate-700 rounded-lg space-y-3">
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                {language === 'ar' ? 'الوضع' : 'Mode'}
+              </label>
+              <div className="flex gap-2 mt-2">
+                {(['normal', 'autonomous', 'creative'] as const).map(mode => (
+                  <Button
+                    key={mode}
+                    size="sm"
+                    variant={aiMode === mode ? 'default' : 'outline'}
+                    onClick={() => setAiMode(mode)}
+                    className="text-xs"
+                  >
+                    {mode === 'autonomous' ? '🤖' : mode === 'creative' ? '✨' : '💬'}
+                    {language === 'ar' 
+                      ? (mode === 'autonomous' ? ' مستقل' : mode === 'creative' ? ' إبداعي' : ' عادي')
+                      : ` ${mode}`}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                {language === 'ar' ? 'نموذج الـ AI' : 'AI Model'}
+              </label>
+              <div className="flex gap-2 mt-2">
+                {(['openai', 'claude', 'gemini'] as const).map(provider => (
+                  <Button
+                    key={provider}
+                    size="sm"
+                    variant={aiProvider === provider ? 'default' : 'outline'}
+                    onClick={() => setAiProvider(provider)}
+                    className="text-xs"
+                  >
+                    {provider === 'openai' ? 'GPT-4' : provider === 'claude' ? 'Claude' : 'Gemini'}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 ? (
           <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-            <div className="text-center">
-              <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
-              <p>
-                {language === 'ar'
-                  ? 'ابدأ محادثة مع الـ AI'
-                  : 'Start a conversation with AI'}
-              </p>
-            </div>
+            <p>{language === 'ar' ? 'لا توجد رسائل بعد' : 'No messages yet'}</p>
           </div>
         ) : (
           messages.map(msg => (
@@ -210,104 +243,63 @@ export function AdminChat() {
               key={msg.id}
               className={`flex ${msg.sender === 'admin' ? 'justify-end' : 'justify-start'}`}
             >
-              <Card
-                className={`max-w-xs lg:max-w-md px-4 py-2 group hover:shadow-md transition-shadow ${
+              <div
+                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg group relative ${
                   msg.sender === 'admin'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-white'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-200 dark:bg-slate-700 text-gray-900 dark:text-white'
                 }`}
               >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1">
-                    <p className="text-sm break-words">{msg.content}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <p className="text-xs opacity-70">
-                        {msg.timestamp.toLocaleTimeString(
-                          language === 'ar' ? 'ar-SA' : 'en-US'
-                        )}
-                      </p>
-                      {msg.type !== 'message' && (
-                        <span className="text-xs px-2 py-0.5 bg-opacity-30 bg-white rounded">
-                          {msg.type}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  {msg.sender === 'ai' && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleCopyMessage(msg.content)}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <Copy className="w-3 h-3" />
-                    </Button>
-                  )}
-                </div>
-              </Card>
+                <p className="text-sm">{msg.content}</p>
+                <p className="text-xs opacity-70 mt-1">
+                  {msg.timestamp.toLocaleTimeString(language === 'ar' ? 'ar-SA' : 'en-US')}
+                </p>
+                {msg.sender === 'ai' && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => handleCopyMessage(msg.content)}
+                  >
+                    <Copy className="w-3 h-3" />
+                  </Button>
+                )}
+              </div>
             </div>
           ))
         )}
-
         {isLoading && (
           <div className="flex justify-start">
-            <Card className="bg-gray-100 dark:bg-slate-700 px-4 py-2">
+            <div className="bg-gray-200 dark:bg-slate-700 px-4 py-2 rounded-lg">
               <div className="flex gap-2">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100" />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200" />
+                <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
               </div>
-            </Card>
+            </div>
           </div>
         )}
-
         <div ref={messagesEndRef} />
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-gray-200 dark:border-slate-700 space-y-2">
+      <div className="p-4 border-t border-gray-200 dark:border-slate-700">
         <div className="flex gap-2">
           <Input
             value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyPress={e => e.key === 'Enter' && handleSendMessage()}
-            placeholder={
-              language === 'ar'
-                ? 'اطلب من الـ AI تحسين المشروع...'
-                : 'Ask AI to improve your project...'
-            }
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            placeholder={language === 'ar' ? 'اكتب أمرك أو سؤالك...' : 'Type your command or question...'}
             disabled={isLoading}
             className="flex-1"
           />
           <Button
             onClick={handleSendMessage}
-            disabled={!input.trim() || isLoading}
+            disabled={isLoading || !input.trim()}
             className="bg-blue-600 hover:bg-blue-700"
           >
             <Send className="w-4 h-4" />
           </Button>
-        </div>
-
-        {/* Quick Commands */}
-        <div className="flex flex-wrap gap-2">
-          {[
-            { cmd: '/analyze', label: language === 'ar' ? 'تحليل' : 'Analyze' },
-            { cmd: '/optimize', label: language === 'ar' ? 'تحسين' : 'Optimize' },
-            { cmd: '/test', label: language === 'ar' ? 'اختبار' : 'Test' },
-            { cmd: '/deploy', label: language === 'ar' ? 'نشر' : 'Deploy' },
-          ].map(({ cmd, label }) => (
-            <Button
-              key={cmd}
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                setInput(cmd);
-              }}
-              className="text-xs"
-            >
-              {label}
-            </Button>
-          ))}
         </div>
       </div>
     </div>
