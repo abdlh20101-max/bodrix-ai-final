@@ -11,6 +11,7 @@ import { aiRouter } from "./routers/ai";
 import { challengesRouter } from "./routers/challenges";
 import { aiChatRouter } from "./routers/aiChat";
 import { billingRouter } from "./routers/billing";
+import { tapBillingRouter } from "./routers/tapBilling";
 
 export const appRouter = router({
   system: systemRouter,
@@ -35,6 +36,7 @@ export const appRouter = router({
   challenges: challengesRouter,
   aiChat: aiChatRouter,
   billing: billingRouter,
+  tapBilling: tapBillingRouter,
 });
 
 export type AppRouter = typeof appRouter;
