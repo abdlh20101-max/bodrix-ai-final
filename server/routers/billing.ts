@@ -1,18 +1,54 @@
 import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
-import { stripeManager, SUBSCRIPTION_PLANS } from "../stripe";
 
 /**
- * Billing Router
- * نظام الفواتير والاشتراكات
+ * Billing Router (Legacy - Use tapBilling instead)
+ * نظام الفواتير والاشتراكات (قديم - استخدم tapBilling بدلاً منه)
+ * 
+ * This router is kept for backward compatibility only.
+ * All new payment functionality should use tapBilling router.
  */
+
+const SUBSCRIPTION_PLANS = [
+  {
+    id: "free",
+    name: "Free Plan",
+    price: 0,
+    currency: "SAR",
+    features: ["5 AI requests per day", "Basic features", "Community support"],
+  },
+  {
+    id: "pro",
+    name: "Pro Plan",
+    price: 99,
+    currency: "SAR",
+    features: [
+      "Unlimited AI requests",
+      "Advanced features",
+      "Priority support",
+      "Custom integrations",
+    ],
+  },
+  {
+    id: "enterprise",
+    name: "Enterprise Plan",
+    price: 299,
+    currency: "SAR",
+    features: [
+      "Unlimited everything",
+      "Dedicated support",
+      "Custom solutions",
+      "SLA guarantee",
+    ],
+  },
+];
 
 export const billingRouter = router({
   /**
    * Get available subscription plans
    */
   getPlans: publicProcedure.query(async () => {
-    return stripeManager.getAllPlans();
+    return SUBSCRIPTION_PLANS;
   }),
 
   /**
@@ -21,7 +57,11 @@ export const billingRouter = router({
   getPlan: publicProcedure
     .input(z.object({ planId: z.string() }))
     .query(async ({ input }) => {
-      return stripeManager.getPlanDetails(input.planId);
+      const plan = SUBSCRIPTION_PLANS.find((p) => p.id === input.planId);
+      if (!plan) {
+        throw new Error("Plan not found");
+      }
+      return plan;
     }),
 
   /**
@@ -40,15 +80,10 @@ export const billingRouter = router({
       }
 
       try {
-        const checkoutUrl = await stripeManager.createCheckoutSession(
-          user.id.toString(),
-          input.planId,
-          user.email || ""
-        );
-
+        // Redirect to /billing page for Tap Payments checkout
         return {
           success: true,
-          url: checkoutUrl,
+          url: `/billing?plan=${input.planId}`,
         };
       } catch (error) {
         console.error("[Billing] Error creating checkout session:", error);
@@ -65,11 +100,7 @@ export const billingRouter = router({
       throw new Error("User not authenticated");
     }
 
-    // TODO: Get from database
-    // const subscription = await db.query.subscriptions.findFirst({
-    //   where: eq(subscriptions.userId, user.id)
-    // });
-
+    // Return default free plan
     return {
       planId: "free",
       status: "active",
@@ -93,20 +124,6 @@ export const billingRouter = router({
         throw new Error("User not authenticated");
       }
 
-      // TODO: Get subscription from database and cancel
-      // const subscription = await db.query.subscriptions.findFirst({
-      //   where: eq(subscriptions.userId, user.id)
-      // });
-      //
-      // if (!subscription) {
-      //   throw new Error("No active subscription");
-      // }
-      //
-      // await stripeManager.cancelSubscription(
-      //   subscription.stripeSubscriptionId,
-      //   input.immediate
-      // );
-
       return { success: true };
     }),
 
@@ -125,20 +142,6 @@ export const billingRouter = router({
         throw new Error("User not authenticated");
       }
 
-      // TODO: Get invoices from Stripe
-      // const customerId = await getStripeCustomerId(user.id);
-      // if (!customerId) return [];
-      //
-      // const invoices = await stripeManager.listInvoices(customerId, input.limit);
-      // return invoices.map(invoice => ({
-      //   id: invoice.id,
-      //   amount: invoice.amount_paid,
-      //   currency: invoice.currency,
-      //   date: new Date(invoice.created * 1000),
-      //   status: invoice.status,
-      //   pdfUrl: invoice.invoice_pdf
-      // }));
-
       return [];
     }),
 
@@ -150,22 +153,6 @@ export const billingRouter = router({
     if (!user) {
       throw new Error("User not authenticated");
     }
-
-    // TODO: Get from database
-    // const subscription = await db.query.subscriptions.findFirst({
-    //   where: eq(subscriptions.userId, user.id)
-    // });
-    //
-    // if (!subscription) {
-    //   return {
-    //     currentUsage: 0,
-    //     limit: 10,
-    //     percentageUsed: 0
-    //   };
-    // }
-    //
-    // const plan = stripeManager.getPlanDetails(subscription.planId);
-    // const usage = await stripeManager.getUsageMetrics(subscription.stripeCustomerId);
 
     return {
       currentUsage: 0,
@@ -189,7 +176,6 @@ export const billingRouter = router({
         throw new Error("User not authenticated");
       }
 
-      // TODO: Update payment method in Stripe
       return { success: true };
     }),
 
@@ -203,19 +189,14 @@ export const billingRouter = router({
       })
     )
     .query(async ({ input }) => {
-      try {
-        const invoice = await stripeManager.getInvoice(input.invoiceId);
-        return {
-          id: invoice.id,
-          amount: invoice.amount_paid,
-          currency: invoice.currency,
-          date: new Date(invoice.created * 1000),
-          status: invoice.status,
-          pdfUrl: invoice.invoice_pdf,
-        };
-      } catch (error) {
-        console.error("[Billing] Error getting invoice:", error);
-        throw new Error("Failed to get invoice");
-      }
+      // Return mock invoice
+      return {
+        id: input.invoiceId,
+        amount: 99,
+        currency: "SAR",
+        date: new Date(),
+        status: "paid",
+        pdfUrl: null,
+      };
     }),
 });

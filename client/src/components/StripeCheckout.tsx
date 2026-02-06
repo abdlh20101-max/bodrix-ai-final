@@ -98,14 +98,13 @@ export function SubscriptionPlans({ onSelectPlan }: SubscriptionPlansProps) {
 
           {/* Plan Name */}
           <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-          <p className="text-gray-600 text-sm mb-4">{plan.description}</p>
 
           {/* Price */}
           <div className="mb-6">
             <span className="text-4xl font-bold">
-              {plan.amount === 0 ? "مجاني" : `$${(plan.amount / 100).toFixed(2)}`}
+              {plan.price === 0 ? "مجاني" : `${plan.price} ${plan.currency}`}
             </span>
-            {plan.amount > 0 && (
+            {plan.price > 0 && (
               <span className="text-gray-600 text-sm mr-2">/ شهر</span>
             )}
           </div>
