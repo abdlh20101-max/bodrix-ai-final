@@ -54,10 +54,10 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">جاري التحميل...</p>
+          <p className="text-slate-300">جاري التحميل...</p>
         </div>
       </div>
     );
@@ -65,6 +65,35 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
 
   if (!isAuthenticated) {
     window.location.href = "/login";
+    return null;
+  }
+
+  return <Component />;
+}
+
+// Admin-only route guard - hides admin routes from regular users
+function AdminRoute({ component: Component }: { component: React.ComponentType }) {
+  const { user, isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-slate-300">جاري التحميل...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    window.location.href = "/login";
+    return null;
+  }
+
+  // Check if user is admin - redirect non-admins to dashboard
+  if (user?.role !== "admin") {
+    window.location.href = "/dashboard";
     return null;
   }
 
@@ -89,7 +118,7 @@ function Router() {
       <Route path="/wallet" component={() => <ProtectedRoute component={Wallet} />} />
       <Route path="/referrals" component={() => <ProtectedRoute component={Referrals} />} />
       <Route path="/ads" component={() => <ProtectedRoute component={Ads} />} />
-      <Route path="/admin" component={() => <ProtectedRoute component={AdminDashboard} />} />
+      <Route path="/admin" component={() => <AdminRoute component={AdminDashboard} />} />
       <Route path="/reports" component={() => <ProtectedRoute component={Reports} />} />
       <Route path="/notifications" component={() => <ProtectedRoute component={Notifications} />} />
       <Route path="/search" component={() => <ProtectedRoute component={Search} />} />
