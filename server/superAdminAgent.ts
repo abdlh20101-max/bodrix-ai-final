@@ -5,9 +5,38 @@ import { autoBackup } from "./autoBackup";
 
 /**
  * Super Admin AI Agent
- * Autonomous agent with unlimited access to execute commands
- * Controlled only by the admin user through chat
+ * AI assistant for admin users with secure command handling
+ * Security Note: Commands are analyzed by AI, NOT executed directly on system
+ * Only admin users can access this agent
  */
+
+// Security: Commands that should never be processed even by AI
+const STRICTLY_BLOCKED_COMMANDS = [
+  "rm -rf /",
+  "format c:",
+  "sudo rm",
+  ":(){ :|:& };:",
+  "mkfs",
+  "> /dev/sda",
+  "dd if=/dev/zero",
+  "wget http",
+  "curl http",
+  "nc -e",
+  "bash -i",
+  "python -c",
+  "php -r",
+  "perl -e",
+];
+
+/**
+ * Check if command is strictly blocked
+ */
+function isStrictlyBlocked(command: string): boolean {
+  const lowerCmd = command.toLowerCase();
+  return STRICTLY_BLOCKED_COMMANDS.some(blocked => 
+    lowerCmd.includes(blocked.toLowerCase())
+  );
+}
 
 export interface AgentCommand {
   id: string;
@@ -52,6 +81,7 @@ class SuperAdminAgent {
 
   /**
    * Process command from admin
+   * Security: All commands are analyzed by AI, NOT executed on system
    */
   async processCommand(
     userId: string,
@@ -61,11 +91,24 @@ class SuperAdminAgent {
   ): Promise<AgentResponse> {
     // Check admin permission
     if (!this.isAdmin(userId)) {
+      console.warn(`[Security] Unauthorized access attempt by user: ${userId}`);
       return {
         commandId: `cmd_${Date.now()}`,
         success: false,
         message: "❌ ليس لديك صلاحية لاستخدام هذا الأمر",
         warnings: ["Unauthorized access attempt"],
+        executionTime: 0,
+      };
+    }
+
+    // Security: Check for strictly blocked commands
+    if (isStrictlyBlocked(command)) {
+      console.warn(`[Security] Strictly blocked command attempt by admin ${userId}: ${command}`);
+      return {
+        commandId: `cmd_${Date.now()}`,
+        success: false,
+        message: "❌ هذا الأمر محظور تماماً لأسباب أمنية",
+        warnings: ["Dangerous command blocked"],
         executionTime: 0,
       };
     }
@@ -86,7 +129,7 @@ class SuperAdminAgent {
     // Add to queue
     this.commandQueue.push(agentCommand);
 
-    // Process command
+    // Process command (AI analysis only, no real execution)
     const response = await this.executeCommand(agentCommand);
 
     const executionTime = Date.now() - startTime;

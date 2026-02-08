@@ -3,9 +3,62 @@ import { getDb } from "./db";
 
 /**
  * Unlimited Access Control System
- * Provides complete unrestricted access to all system functions
+ * Provides controlled access to system functions for admin users only
  * with smart warnings for potentially dangerous operations
+ * 
+ * Security Note: This module is restricted to admin users only
  */
+
+// Blocked dangerous commands - these are never allowed to be executed
+const BLOCKED_COMMANDS = [
+  "rm -rf",
+  "sudo",
+  "chmod",
+  "chown",
+  "mkfs",
+  "dd if=",
+  "wget",
+  "curl",
+  "> /dev/",
+  "nc -",
+  "eval(",
+  "exec(",
+  "system(",
+  "shell_exec",
+  "passthru",
+  "__import__",
+  "os.system",
+  "subprocess",
+  "import os",
+  "require('child_process')",
+  "process.env",
+  ".env",
+  "private_key",
+  "secret_key",
+  "password",
+  "DROP TABLE",
+  "DROP DATABASE",
+  "TRUNCATE",
+  "DELETE FROM users",
+  "shutdown",
+  "reboot",
+  "format",
+  "fdisk",
+];
+
+// Sensitive file paths that should never be accessed
+const BLOCKED_FILE_PATHS = [
+  "/etc/passwd",
+  "/etc/shadow",
+  "/etc/sudoers",
+  ".ssh/",
+  ".env",
+  "id_rsa",
+  "credentials",
+  "config/secrets",
+  ".git/config",
+  "node_modules",
+];
 
 export interface AccessRequest {
   command: string;
@@ -35,6 +88,55 @@ export interface AccessLog {
 }
 
 class UnlimitedAccessController {
+  /**
+   * Check if command contains blocked patterns
+   * Returns true if command is blocked
+   */
+  private isCommandBlocked(command: string): { blocked: boolean; reason?: string } {
+    const lowerCmd = command.toLowerCase();
+    
+    // Check for blocked commands
+    for (const blockedCmd of BLOCKED_COMMANDS) {
+      if (lowerCmd.includes(blockedCmd.toLowerCase())) {
+        return {
+          blocked: true,
+          reason: `الأمر يحتوي على نمط محظور: ${blockedCmd}`,
+        };
+      }
+    }
+    
+    // Check for blocked file paths
+    for (const blockedPath of BLOCKED_FILE_PATHS) {
+      if (lowerCmd.includes(blockedPath.toLowerCase())) {
+        return {
+          blocked: true,
+          reason: `الأمر يحاول الوصول لملفات محظورة: ${blockedPath}`,
+        };
+      }
+    }
+    
+    // Check for shell injection patterns
+    const shellInjectionPatterns = [
+      /;\s*\w+/,  // command chaining with semicolon
+      /\|\s*\w+/, // pipe to another command
+      /`[^`]+`/,  // backtick execution
+      /\$\([^)]+\)/, // subshell execution
+      /&&\s*\w+/, // AND chaining
+      /\|\|\s*\w+/, // OR chaining
+    ];
+    
+    for (const pattern of shellInjectionPatterns) {
+      if (pattern.test(command)) {
+        return {
+          blocked: true,
+          reason: "الأمر يحتوي على نمط حقن محظور",
+        };
+      }
+    }
+    
+    return { blocked: false };
+  }
+
   /**
    * Evaluate risk level of a command
    */
@@ -125,9 +227,34 @@ class UnlimitedAccessController {
   }
 
   /**
-   * Process unlimited access request
+   * Process access request with security validation
    */
   async processRequest(request: AccessRequest): Promise<AccessLog> {
+    // First, check if the command is blocked for security
+    const blockCheck = this.isCommandBlocked(request.command);
+    
+    if (blockCheck.blocked) {
+      console.warn(`[Security] Blocked command from user ${request.userId}: ${request.command}`);
+      
+      const blockedLog: AccessLog = {
+        id: `access_${Date.now()}`,
+        userId: request.userId,
+        command: request.command,
+        riskLevel: "critical",
+        warnings: [{
+          type: "security",
+          message: blockCheck.reason || "الأمر محظور لأسباب أمنية",
+          canProceed: false,
+        }],
+        executed: false,
+        result: `❌ تم حظر هذا الأمر لأسباب أمنية: ${blockCheck.reason}`,
+        timestamp: new Date(),
+      };
+      
+      await this.logAccess(blockedLog);
+      return blockedLog;
+    }
+
     const riskLevel = this.evaluateRiskLevel(request.command);
     const warnings = this.generateWarnings(request.command, riskLevel);
 
@@ -143,9 +270,9 @@ class UnlimitedAccessController {
       timestamp: new Date(),
     };
 
-    // Always execute the command (unlimited access)
+    // Execute the command through AI analysis (no real system execution)
     try {
-      // Execute the command through AI analysis
+      // Execute the command through AI analysis only - not real system commands
       const analysis = await this.analyzeCommand(request.command);
 
       log.executed = true;
