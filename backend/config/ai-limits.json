@@ -1,0 +1,5 @@
+{
+  "free": { "messages": 20, "images": 2, "links": 2 },
+  "login_bonus": 10,
+  "reward": { "per_action": 10, "max_per_day": 5 }
+}

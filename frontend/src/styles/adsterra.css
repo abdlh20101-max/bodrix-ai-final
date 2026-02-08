@@ -1,0 +1,11 @@
+.adsterra-top {
+  width: 728px;
+  height: 90px;
+  max-height: 60px;
+  margin: 0 auto 12px auto;
+  opacity: 0.9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+}

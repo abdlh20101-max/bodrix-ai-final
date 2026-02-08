@@ -1,0 +1,21 @@
+{
+  "free": {
+    "price": 0,
+    "ai": "basic",
+    "support": "limited"
+  },
+  "pro": {
+    "price": 9.99,
+    "messages": 500,
+    "ai": "advanced",
+    "trial_days": 7,
+    "support": "priority"
+  },
+  "enterprise": {
+    "price": 49,
+    "messages": "unlimited",
+    "ai": "ultra",
+    "trial_days": 14,
+    "support": "24/7"
+  }
+}
