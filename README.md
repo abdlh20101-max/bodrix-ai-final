@@ -122,8 +122,8 @@ NEXTAUTH_SECRET=your-secret-key-here
 JWT_SECRET=your-jwt-secret-here
 
 # Google OAuth (اختياري)
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_CLIENT_ID=783438924766-cpokkskspmpfn2hr62qn5ehl7sbd4h94.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
 
 # Manus OAuth
 VITE_OAUTH_PORTAL_URL=your-oauth-portal-url
