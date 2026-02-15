@@ -195,15 +195,13 @@ export default function Dashboard() {
               <span className="text-sm font-semibold">محادثة جديدة</span>
             </Button>
 
-            {/* Plans Button - Coming Soon */}
+            {/* Plans Button */}
             <Button
-              disabled
-              className="h-24 bg-gradient-to-br from-gray-500 to-gray-600 text-white flex flex-col items-center justify-center gap-2 rounded-lg cursor-not-allowed opacity-60"
-              title="خدمة الدفع قريباً"
+              onClick={() => navigate("/plans")}
+              className="h-24 bg-gradient-to-br from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white flex flex-col items-center justify-center gap-2 rounded-lg"
             >
               <CreditCard className="w-8 h-8" />
               <span className="text-sm font-semibold">الخطط والباقات</span>
-              <span className="text-xs">قريباً</span>
             </Button>
 
             {/* History Button */}

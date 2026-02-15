@@ -1,4 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { AdBannerTop } from "@/components/AdBannerTop";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -83,17 +84,22 @@ export default function DashboardLayout({
   }
 
   return (
-    <SidebarProvider
-      style={
-        {
-          "--sidebar-width": `${sidebarWidth}px`,
-        } as CSSProperties
-      }
-    >
-      <DashboardLayoutContent setSidebarWidth={setSidebarWidth}>
-        {children}
-      </DashboardLayoutContent>
-    </SidebarProvider>
+    <div className="min-h-screen flex flex-col">
+      <div className="sticky top-0 z-50">
+        <AdBannerTop />
+      </div>
+      <SidebarProvider
+        style={
+          {
+            "--sidebar-width": `${sidebarWidth}px`,
+          } as CSSProperties
+        }
+      >
+        <DashboardLayoutContent setSidebarWidth={setSidebarWidth}>
+          {children}
+        </DashboardLayoutContent>
+      </SidebarProvider>
+    </div>
   );
 }
 

@@ -64,7 +64,7 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     };
     const updateSet: Record<string, unknown> = {};
 
-    const textFields = ["name", "email", "loginMethod"] as const;
+    const textFields = ["name", "email", "loginMethod", "username", "passwordHash", "phone"] as const;
     type TextField = (typeof textFields)[number];
 
     const assignNullable = (field: TextField) => {
@@ -135,6 +135,30 @@ export async function getUserById(id: number) {
   const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
 
   return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getUserByUsername(username: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.username, username)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getUserByPhone(phone: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const normalized = phone.replace(/\s/g, "");
+  const result = await db.select().from(users).where(eq(users.phone, normalized)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createUser(user: InsertUser): Promise<User | undefined> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(users).values(user);
+  if (user.username) return getUserByUsername(user.username);
+  if (user.phone) return getUserByPhone(user.phone);
+  return getUserByOpenId(user.openId);
 }
 
 // ============ MESSAGE FUNCTIONS ============
