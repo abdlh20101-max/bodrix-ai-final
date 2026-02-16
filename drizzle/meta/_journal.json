@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1770148033780,
+      "tag": "0000_talented_charles_xavier",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1770159800606,
+      "tag": "0001_lucky_steve_rogers",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1770175152075,
+      "tag": "0002_flowery_rawhide_kid",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1770198521432,
+      "tag": "0003_greedy_goblin_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1770328166454,
+      "tag": "0004_loving_mystique",
+      "breakpoints": true
+    }
+  ]
+}
